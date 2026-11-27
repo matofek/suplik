@@ -1,0 +1,57 @@
+name: Aktualizovať manifest galérie
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'galeria/**'
+      - '!galeria/manifest.json'
+      - '!galeria/thumbs/**'
+      - 'scripts/build_manifest.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-gallery-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repozitára (plná história pre dátumy prác)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Nastaviť Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Nainštalovať Pillow
+        run: pip install --quiet pillow
+
+      - name: Vygenerovať manifest.json a WebP náhľady
+        run: python scripts/build_manifest.py
+
+      - name: Commitnúť aktualizovaný manifest a náhľady
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add galeria/manifest.json
+          if [ -d "galeria/thumbs" ]; then
+            git add -A galeria/thumbs
+          else
+            git rm -r --ignore-unmatch galeria/thumbs
+          fi
+          if git diff --cached --quiet; then
+            echo "Žiadne zmeny v galérii."
+          else
+            git commit -m "chore(galeria): aktualizácia manifest.json a náhľadov [skip ci]"
+            git push
+          fi
