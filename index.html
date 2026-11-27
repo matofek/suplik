@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ŠUPlíková galéria — ŠUP Košice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --cobalt: #1c68a6;
+      --coral: #f15b40;
+      --handle-fill: #86add1;
+      --paper: #ffffff;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100dvh;
+      background-color: var(--paper);
+      color: var(--cobalt);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    a,
+    [tabindex],
+    svg g {
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus:not(:focus-visible),
+    a:focus:not(:focus-visible),
+    [tabindex]:focus:not(:focus-visible),
+    svg g:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    .svg-interactive {
+      cursor: pointer;
+    }
+
+    .svg-interactive:focus-visible .focus-ring-target {
+      stroke: var(--coral);
+      stroke-width: 2.5;
+    }
+
+    .a4-paper-path {
+      transition: stroke 0.18s ease;
+    }
+
+    .a4-info-glyphs {
+      transition: fill 0.18s ease;
+    }
+
+    .app-shell {
+      width: 100%;
+      height: 100dvh;
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .top-bar {
+      width: 100%;
+      padding: 18px 28px 4px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .brand-logo-slot {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand-logo-svg {
+      height: clamp(52px, 6.2vw, 76px);
+      width: auto;
+      display: block;
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cobalt);
+      opacity: 0.72;
+      white-space: nowrap;
+      padding-bottom: 6px;
+    }
+
+    .top-actions {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    body.force-2d .top-actions {
+      display: flex;
+    }
+
+    .pill-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      padding: 7px 12px;
+      border: 1.5px solid var(--cobalt);
+      border-radius: 6px;
+      background: var(--paper);
+      color: var(--cobalt);
+      cursor: pointer;
+      transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .pill-btn:hover,
+    .pill-btn.is-active {
+      background: var(--cobalt);
+      color: var(--paper);
+    }
+
+    .pill-btn.coral-accent {
+      border-color: var(--coral);
+      color: var(--coral);
+    }
+
+    .pill-btn.coral-accent:hover {
+      background: var(--coral);
+      color: var(--paper);
+    }
+
+    .stage-wrapper {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    #desktop-stage {
+      width: 100%;
+      height: 100%;
+      max-width: 1480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    #studio-svg {
+      width: 100%;
+      height: 100%;
+      max-height: calc(100dvh - 122px);
+      display: block;
+      overflow: visible;
+    }
+
+    .bottom-bar {
+      width: 100%;
+      padding: 4px 28px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cobalt);
+      opacity: 0.68;
+      flex-shrink: 0;
+    }
+
+    .corner-nav-link {
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .corner-nav-link:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    .corner-nav-link .nav-chevron {
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .corner-nav-link:hover .nav-chevron,
+    .corner-nav-link:focus-visible .nav-chevron {
+      transform: translateX(-5px);
+    }
+
+    #mobile-list {
+      display: none;
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 4px 0 32px;
+    }
+
+    body.force-2d #desktop-stage {
+      display: none;
+    }
+
+    body.force-2d #mobile-list {
+      display: block;
+    }
+
+    body.force-2d .app-shell {
+      height: auto;
+      min-height: 100dvh;
+      overflow: visible;
+    }
+
+    @media (max-width: 820px) {
+      .app-shell {
+        height: auto;
+        min-height: 100dvh;
+        overflow: visible;
+      }
+
+      .top-bar {
+        padding: 14px 16px 10px;
+      }
+
+      .top-actions {
+        display: flex;
+      }
+
+      .brand-sub {
+        display: none;
+      }
+
+      #desktop-stage {
+        display: none !important;
+      }
+
+      #mobile-list {
+        display: block !important;
+        padding: 0 16px 28px;
+      }
+
+      #toggle-2d-btn {
+        display: none;
+      }
+
+      .bottom-bar {
+        padding: 8px 16px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+
+    .drawer-row-card {
+      width: 100%;
+      border: 1.5px solid var(--cobalt);
+      border-bottom: none;
+      background: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .drawer-row-card:first-child {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .drawer-row-card:last-child {
+      border-bottom: 1.5px solid var(--cobalt);
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    .drawer-row-card:hover,
+    .drawer-row-card:active {
+      background: #f3f8fc;
+    }
+
+    .row-segment-icon {
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-origin: 18.545px 24.73px;
+    }
+
+    .drawer-row-card:hover .row-segment-icon {
+      transform: rotate(45deg);
+    }
+
+    #gallery-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+    }
+
+    #gallery-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .paper-sheet {
+      width: 100%;
+      max-width: 1320px;
+      height: 90dvh;
+      background: var(--paper);
+      border: 2px solid var(--cobalt);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(34px) scale(0.97);
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #gallery-overlay.is-open .paper-sheet {
+      transform: translateY(0) scale(1);
+    }
+
+    .sheet-header {
+      padding: 16px 24px;
+      border-bottom: 1.5px solid var(--cobalt);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--paper);
+      flex-shrink: 0;
+    }
+
+    .sheet-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      background: var(--paper);
+    }
+
+    .masonry-columns {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .masonry-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .work-card {
+      border: 1.5px solid var(--cobalt);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--paper);
+      cursor: pointer;
+      transition: border-color 0.16s ease, transform 0.18s ease;
+      position: relative;
+    }
+
+    .work-card:hover {
+      border-color: var(--coral);
+      transform: translateY(-2px);
+    }
+
+    .work-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #f5f9fd;
+    }
+
+    .work-meta {
+      padding: 10px 12px;
+      border-top: 1px solid rgba(28, 104, 166, 0.22);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .badge-new {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--coral);
+      border: 1px solid var(--coral);
+      border-radius: 4px;
+      padding: 1px 5px;
+      flex-shrink: 0;
+    }
+
+    #info-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    #info-modal.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .a4-modal-card {
+      width: 100%;
+      max-width: 680px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      background: var(--paper);
+      border: 2px solid var(--cobalt);
+      border-radius: 10px;
+      padding: 28px 32px;
+      position: relative;
+      transform: translateY(24px) rotate(-1deg);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #info-modal.is-open .a4-modal-card {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      background: rgba(255, 255, 255, 0.97);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    #lightbox.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #lightbox img {
+      max-width: 92vw;
+      max-height: 76dvh;
+      border: 2px solid var(--cobalt);
+      border-radius: 8px;
+      object-fit: contain;
+      background: var(--paper);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand-group">
+        <div id="brand-logo-slot" class="brand-logo-slot" aria-label="ŠUPlíková galéria"></div>
+        <span class="brand-sub hidden sm:inline">Škola umeleckého priemyslu Košice · archív 11 odborov</span>
+      </div>
+
+      <div class="top-actions">
+        <button id="open-info-btn" type="button" class="pill-btn coral-accent" title="Otvoriť info hárok A4">
+          <span>A4 info</span>
+        </button>
+        <button id="toggle-2d-btn" type="button" class="pill-btn" title="Prepnúť medzi 3D skriňou a 2D zoznamom">
+          3D skriňa
+        </button>
+      </div>
+    </header>
+
+    <main class="stage-wrapper">
+      <section id="desktop-stage" aria-label="Interaktívna axonometrická výkresová skriňa">
+        <svg
+          id="studio-svg"
+          viewBox="0 0 1480 940"
+          preserveAspectRatio="xMidYMid meet"
+          role="img"
+          aria-label="ŠUPlíková galéria — axonometrická výkresová skriňa vľavo, hodiny Pragotron vpravo hore a zahnutý info list A4"
+        ></svg>
+      </section>
+
+      <section id="mobile-list" aria-label="Zoznam 11 študijných odborov">
+        <div id="mobile-rows-container"></div>
+      </section>
+    </main>
+
+    <footer class="bottom-bar">
+      <span>klikni na šuplík pre otvorenie galérie · list A4 pri skrini obsahuje info o škole</span>
+      <span id="ftp-status-label">archív: ./galeria/manifest.json · načítavam...</span>
+    </footer>
+  </div>
+
+  <div id="gallery-overlay" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="paper-sheet">
+      <div class="sheet-header">
+        <div class="flex items-center gap-3 min-w-0">
+          <div id="sheet-code-badge" class="shrink-0 flex items-center"></div>
+          <div class="min-w-0">
+            <h2
+              id="sheet-title"
+              class="truncate text-xl sm:text-2xl font-extrabold uppercase tracking-tight"
+              style="font-family: var(--font-display); color: var(--cobalt);"
+            >
+              Grafický dizajn
+            </h2>
+            <p
+              id="sheet-subtitle"
+              class="text-xs truncate"
+              style="font-family: var(--font-mono); color: var(--cobalt); opacity: 0.72;"
+            >
+              /galeria/GDI/ · zatiaľ bez prác
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="prev-drawer-btn" type="button" class="pill-btn" title="Predchádzajúci šuplík (šípka hore)">
+            ↑
+          </button>
+          <button id="next-drawer-btn" type="button" class="pill-btn" title="Nasledujúci šuplík (šípka dole)">
+            ↓
+          </button>
+          <button id="close-sheet-btn" type="button" class="pill-btn coral-accent">
+            Zavrieť šuplík ✕
+          </button>
+        </div>
+      </div>
+
+      <div id="sheet-scroll-area" class="sheet-body">
+        <div id="masonry-container" class="masonry-columns"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
+    <div class="a4-modal-card">
+      <div class="flex items-start justify-between gap-4 pb-4 mb-5" style="border-bottom: 1.5px solid var(--cobalt);">
+        <div>
+          <span
+            class="inline-block text-xs font-semibold uppercase px-2 py-0.5 rounded mb-2"
+            style="font-family: var(--font-mono); border: 1px solid var(--coral); color: var(--coral);"
+          >
+            FORMÁT A4 · INFO LIST
+          </span>
+          <h2
+            id="info-modal-title"
+            class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight"
+            style="font-family: var(--font-display); color: var(--cobalt);"
+          >
+            ŠUPlíková galéria · ŠUP Košice
+          </h2>
+        </div>
+        <button id="close-info-btn" type="button" class="pill-btn coral-accent shrink-0">
+          Zavrieť ✕
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm leading-relaxed" style="color: var(--cobalt);">
+        <p>
+          <strong>Škola umeleckého priemyslu v Košiciach</strong> združuje 11 výtvarných, dizajnérskych a reštaurátorských
+          odborov. Každý zo šuplíkov tejto digitálnej výkresovej skrine otvára živý archív klauzúrnych, ateliérových a
+          maturitných prác našich študentov.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div class="p-3 rounded-lg" style="border: 1.5px solid var(--cobalt);">
+            <div class="text-xs uppercase mb-1" style="font-family: var(--font-mono); color: var(--coral);">
+              Adresa školy
+            </div>
+            <div class="font-semibold">Grešákova 1, 040 01 Košice</div>
+            <div class="text-xs opacity-75 mt-0.5">subdoména: galeria.supke.sk</div>
+          </div>
+
+          <div class="p-3 rounded-lg" style="border: 1.5px solid var(--cobalt);">
+            <div class="text-xs uppercase mb-1" style="font-family: var(--font-mono); color: var(--coral);">
+              Ako funguje archív
+            </div>
+            <div class="font-semibold">11 priečinkov = 11 odborov</div>
+            <div class="text-xs opacity-75 mt-0.5">Najnovšie nahraté práce sa radia vždy na začiatok.</div>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <div class="text-xs uppercase mb-2" style="font-family: var(--font-mono); opacity: 0.75;">
+            Rýchly výber odboru (abecedne):
+          </div>
+          <div id="info-departments-grid" class="flex flex-wrap gap-1.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Detail študentskej práce">
+    <div class="w-full max-w-4xl flex items-center justify-between mb-3 px-1">
+      <div id="lightbox-caption" class="text-xs sm:text-sm font-medium" style="font-family: var(--font-mono);"></div>
+      <button id="close-lightbox-btn" type="button" class="pill-btn coral-accent">
+        Späť do galérie ✕
+      </button>
+    </div>
+    <img id="lightbox-img" src="" alt="" />
+    <div class="flex items-center gap-3 mt-4">
+      <button id="lb-prev-btn" type="button" class="pill-btn">← Predchádzajúca</button>
+      <button id="lb-next-btn" type="button" class="pill-btn">Nasledujúca →</button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Zdroj dát:
+     * - Na GitHub Pages (predvolené): načíta ./galeria/manifest.json (generovaný cez GitHub Actions).
+     * - Na budúcom FTP/PHP serveri: nastav API_ENDPOINT napr. na './api.php'.
+     */
+    const MANIFEST_URL = './galeria/manifest.json';
+    const API_ENDPOINT = '';
+    const NEW_BADGE_DAYS = 30;
+
+    const CORNER_SEGMENT_POINTS = '27.82 6.18 0 6.18 0 15.46 27.82 15.46 27.82 43.28 37.09 43.28 37.09 15.46 37.09 6.18 27.82 6.18';
+    const CORNER_PIVOT = { x: 18.545, y: 24.73 };
+    const SIDE_ARTBOARD_WIDTH = 445.08;
+
+    const DEPARTMENTS = [
+      { code: 'ANI', name: 'Animovaná tvorba', lines: ['Animovaná', 'tvorba'], folder: 'ANI' },
+      { code: 'DDA', name: 'Dizajn digitálnych aplikácií', lines: ['Dizajn digitálnych', 'aplikácií'], folder: 'DDA' },
+      { code: 'DEX', name: 'Dizajn exteriéru', lines: ['Dizajn', 'exteriéru'], folder: 'DEX' },
+      { code: 'DIM', name: 'Digitálna maľba – koncept art', lines: ['Digitálna maľba', '– koncept art'], folder: 'DIM' },
+      { code: 'FOD', name: 'Fotografický dizajn', lines: ['Fotografický', 'dizajn'], folder: 'FOD' },
+      { code: 'GDI', name: 'Grafický dizajn', lines: ['Grafický', 'dizajn'], folder: 'GDI' },
+      { code: 'GPD', name: 'Grafický a priestorový dizajn', lines: ['Grafický a priestorový', 'dizajn'], folder: 'GPD' },
+      { code: 'KRM', name: 'Konzervátorstvo a reštaurátorstvo – maliarske techniky', lines: ['Konzervátorstvo', 'a reštaurátorstvo', '– maliarske techniky'], folder: 'KRM' },
+      { code: 'ODE', name: 'Odevný dizajn', lines: ['Odevný', 'dizajn'], folder: 'ODE' },
+      { code: 'PRV', name: 'Propagačné výtvarníctvo', lines: ['Propagačné', 'výtvarníctvo'], folder: 'PRV' },
+      { code: 'SCE', name: 'Scénická dekoračná tvorba a reprodukčná maľba', lines: ['Scénická dekoračná', 'tvorba a reprodukčná', 'maľba'], folder: 'SCE' },
+    ];
+
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+
+    // Axonometrické osi a rozmery skrine
+    const vx = { x: 0.958, y: -0.284 };
+    const vy = { x: 0.948, y: 0.317 };
+    const ORIGIN = { x: 460, y: 855 };
+
+    const W = 520;
+    const D = 290;
+    const H_DRAWERS = 440;
+    const H_LID = 32;
+    const H_TOTAL = H_DRAWERS + H_LID;
+    const POST_W = 14;
+    const DRAWER_H = H_DRAWERS / DEPARTMENTS.length;
+
+    const SIDE_MARGIN = 18;
+    const SIDE_USABLE_W = D - SIDE_MARGIN * 2;
+    let uniformSideFontSize = 26;
+
+    // Cache prác načítaných z manifest.json alebo API
+    const GALLERY_CACHE = {};
+    DEPARTMENTS.forEach((dept) => {
+      GALLERY_CACHE[dept.code] = [];
+    });
+
+    let manifestLoaded = false;
+    let manifestLoadPromise = null;
+
+    function proj(x, y, z) {
+      return {
+        x: ORIGIN.x + x * vx.x + y * vy.x,
+        y: ORIGIN.y + x * vx.y + y * vy.y - z,
+      };
+    }
+
+    function pts(list) {
+      return list.map((p) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
+    }
+
+    function el(tag, attrs = {}) {
+      const node = document.createElementNS(SVG_NS, tag);
+      for (const [k, v] of Object.entries(attrs)) {
+        node.setAttribute(k, v);
+      }
+      return node;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatWorksCount(count) {
+      if (!count) return 'zatiaľ bez prác';
+      if (count === 1) return '1 práca';
+      if (count >= 2 && count <= 4) return `${count} práce`;
+      return `${count} prác`;
+    }
+
+    function matrixString(p0, pU, pV) {
+      const a = pU.x - p0.x;
+      const b = pU.y - p0.y;
+      const c = pV.x - p0.x;
+      const d = pV.y - p0.y;
+      return `matrix(${a.toFixed(5)} ${b.toFixed(5)} ${c.toFixed(5)} ${d.toFixed(5)} ${p0.x.toFixed(2)} ${p0.y.toFixed(2)})`;
+    }
+
+    function cloneSvgAsset(id) {
+      const tpl = document.getElementById('svg-assets');
+      if (!tpl) return null;
+      const src = tpl.content.querySelector(`#${id}`);
+      if (!src) return null;
+      const clone = src.cloneNode(true);
+      clone.removeAttribute('id');
+      return clone;
+    }
+
+    function createCodeGlyphGroup(code, segmentAngle = 0) {
+      const g = el('g');
+      const letters = cloneSvgAsset(`asset-code-${code}`);
+      if (letters) g.appendChild(letters);
+
+      const seg = el('polygon', {
+        points: CORNER_SEGMENT_POINTS,
+        fill: '#f15b40',
+        transform: `rotate(${segmentAngle.toFixed(2)} ${CORNER_PIVOT.x} ${CORNER_PIVOT.y})`,
+      });
+      g.appendChild(seg);
+      return g;
+    }
+
+    function setSegmentAngle(segEl, angleDeg) {
+      if (!segEl) return;
+      segEl.setAttribute('transform', `rotate(${angleDeg.toFixed(2)} ${CORNER_PIVOT.x} ${CORNER_PIVOT.y})`);
+    }
+
+    function computeUniformSideFontSize() {
+      const measureSvg = el('svg', { width: '0', height: '0', style: 'position:absolute;visibility:hidden;' });
+      document.body.appendChild(measureSvg);
+
+      let maxLines = 1;
+      for (const dept of DEPARTMENTS) {
+        if (dept.lines.length > maxLines) maxLines = dept.lines.length;
+      }
+
+      const maxBlockH = H_DRAWERS - 104;
+      const maxSizeByHeight = Math.floor(maxBlockH / (maxLines * 1.12));
+      let size = Math.min(34, maxSizeByHeight);
+
+      while (size > 16) {
+        let fitsAll = true;
+        for (const dept of DEPARTMENTS) {
+          for (const line of dept.lines) {
+            const t = el('text', {
+              'font-family': "'Barlow Condensed', sans-serif",
+              'font-weight': '800',
+              'font-size': String(size),
+            });
+            t.textContent = line;
+            measureSvg.appendChild(t);
+            const w = t.getComputedTextLength();
+            measureSvg.removeChild(t);
+            if (w > SIDE_USABLE_W) {
+              fitsAll = false;
+              break;
+            }
+          }
+          if (!fitsAll) break;
+        }
+        if (fitsAll) break;
+        size -= 1;
+      }
+
+      document.body.removeChild(measureSvg);
+      uniformSideFontSize = size;
+    }
+
+    function parseWorkFilename(filename, fallbackYear = '') {
+      const clean = String(filename || '').replace(/\.[^.]+$/, '');
+      const parts = clean.split('_').filter(Boolean);
+
+      if (parts.length >= 3 && /^\d{4}$/.test(parts[0])) {
+        return {
+          year: parts[0],
+          author: parts[1].replace(/-/g, ' ').trim(),
+          title: parts.slice(2).join(' ').replace(/-/g, ' ').trim(),
+        };
+      }
+      if (parts.length === 2) {
+        return {
+          year: fallbackYear,
+          author: parts[0].replace(/-/g, ' ').trim(),
+          title: parts[1].replace(/-/g, ' ').trim(),
+        };
+      }
+      return {
+        year: fallbackYear,
+        author: '',
+        title: clean.replace(/[-_]+/g, ' ').trim() || 'Bez názvu',
+      };
+    }
+
+    function normalizeWorkItem(raw, dept, idx) {
+      const addedAt = Number(raw.addedAt || 0);
+      const addedYear = addedAt ? String(new Date(addedAt * 1000).getFullYear()) : '';
+      const parsed = parseWorkFilename(raw.filename || '', addedYear);
+      const nowSec = Date.now() / 1000;
+      const isRecent = addedAt > 0 && (nowSec - addedAt) <= NEW_BADGE_DAYS * 86400;
+
+      const fullUrl = raw.fullUrl || raw.url || `./galeria/${dept.folder}/${encodeURIComponent(raw.filename || '')}`;
+      const thumbUrl = raw.thumbUrl || fullUrl;
+
+      return {
+        id: raw.id || `${dept.code}-${idx}`,
+        filename: raw.filename || '',
+        title: (raw.title || parsed.title || 'Bez názvu').trim(),
+        author: (raw.author !== undefined ? raw.author : parsed.author).trim(),
+        year: String(raw.year !== undefined ? raw.year : parsed.year).trim(),
+        width: Number(raw.width) || 800,
+        height: Number(raw.height) || 800,
+        addedAt,
+        isNew: typeof raw.isNew === 'boolean' ? raw.isNew : (isRecent && idx < 3),
+        thumbUrl,
+        fullUrl,
+      };
+    }
+
+    function getWorksForDepartment(code) {
+      return GALLERY_CACHE[code] || [];
+    }
+
+    function updateStatusFooter(customMessage = null) {
+      const label = document.getElementById('ftp-status-label');
+      if (!label) return;
+      if (customMessage) {
+        label.textContent = customMessage;
+        return;
+      }
+      const total = DEPARTMENTS.reduce((sum, d) => sum + getWorksForDepartment(d.code).length, 0);
+      label.textContent = total > 0
+        ? `archív: ${formatWorksCount(total)} · zoradené od najnovších`
+        : 'archív: zatiaľ bez prác · pridaj obrázky do /galeria/{skratka}/';
+    }
+
+    async function loadGalleryManifest() {
+      if (manifestLoadPromise) return manifestLoadPromise;
+
+      manifestLoadPromise = (async () => {
+        if (API_ENDPOINT) {
+          manifestLoaded = true;
+          updateStatusFooter(`zdroj: ${API_ENDPOINT}`);
+          return;
+        }
+
+        try {
+          const cacheBust = `?v=${Date.now()}`;
+          const res = await fetch(`${MANIFEST_URL}${cacheBust}`, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          const byDept = data.departments || data || {};
+
+          DEPARTMENTS.forEach((dept) => {
+            const rawList = Array.isArray(byDept[dept.code]) ? byDept[dept.code] : [];
+            GALLERY_CACHE[dept.code] = rawList.map((item, idx) => normalizeWorkItem(item, dept, idx));
+          });
+
+          manifestLoaded = true;
+          updateStatusFooter();
+        } catch (err) {
+          manifestLoaded = true;
+          console.info('Manifest zatiaľ nie je dostupný (alebo beží cez file://):', err);
+          const isLocalFile = window.location.protocol === 'file:';
+          updateStatusFooter(
+            isLocalFile
+              ? 'lokálny náhľad (file://) · na GitHube sa načíta galeria/manifest.json'
+              : 'archív: zatiaľ bez prác · pridaj obrázky do /galeria/{skratka}/'
+          );
+        }
+
+        buildMobileList();
+        const activeIdx = openedDrawerIdx >= 0 ? openedDrawerIdx : hoveredDrawerIdx;
+        if (activeIdx >= 0) {
+          updateSideDepartmentDisplay(activeIdx);
+        }
+      })();
+
+      return manifestLoadPromise;
+    }
+
+    async function fetchDepartmentWorks(dept) {
+      if (API_ENDPOINT) {
+        try {
+          const res = await fetch(`${API_ENDPOINT}?folder=${encodeURIComponent(dept.folder)}`);
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          const rawList = Array.isArray(data.items) ? data.items : (Array.isArray(data.works) ? data.works : []);
+          const normalized = rawList.map((item, idx) => normalizeWorkItem(item, dept, idx));
+          GALLERY_CACHE[dept.code] = normalized;
+          return normalized;
+        } catch (err) {
+          console.warn('API nedostupné:', err);
+          return [];
+        }
+      }
+
+      if (!manifestLoaded) {
+        await loadGalleryManifest();
+      }
+      return getWorksForDepartment(dept.code);
+    }
+
+    const studioSvg = document.getElementById('studio-svg');
+    const drawerState = DEPARTMENTS.map((dept, index) => ({
+      index,
+      dept,
+      currentPull: 0,
+      targetPull: 0,
+      currentAngle: 0,
+      targetAngle: 0,
+      dom: null,
+    }));
+
+    let hoveredDrawerIdx = -1;
+    let openedDrawerIdx = -1;
+    let sideNameGroup = null;
+    let clockHourEl = null;
+    let clockMinEl = null;
+
+    let sheetA4Group = null;
+    let a4InnerWrap = null;
+    let a4CurrentSlide = 0;
+    let a4TargetSlide = 0;
+
+    function buildScene() {
+      studioSvg.innerHTML = '';
+
+      buildPragotronClock();
+
+      const cabinetGroup = el('g', { id: 'cabinet-body' });
+
+      // Ľavá plná modrá bočnica
+      cabinetGroup.appendChild(
+        el('polygon', {
+          points: pts([
+            proj(0, -D, 0),
+            proj(0, 0, 0),
+            proj(0, 0, H_TOTAL),
+            proj(0, -D, H_TOTAL),
+          ]),
+          fill: '#1c68a6',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      // Horná doska (veko) skrine
+      cabinetGroup.appendChild(
+        el('polygon', {
+          points: pts([
+            proj(0, -D, H_TOTAL),
+            proj(W, -D, H_TOTAL),
+            proj(W, 0, H_TOTAL),
+            proj(0, 0, H_TOTAL),
+          ]),
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      // Predné čelo hornej dosky (veka) nad šuplíkmi
+      cabinetGroup.appendChild(
+        el('polygon', {
+          points: pts([
+            proj(0, 0, H_DRAWERS),
+            proj(W, 0, H_DRAWERS),
+            proj(W, 0, H_TOTAL),
+            proj(0, 0, H_TOTAL),
+          ]),
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      // Predný ľavý zvislý stĺpik rámu
+      cabinetGroup.appendChild(
+        el('polygon', {
+          points: pts([
+            proj(0, 0, 0),
+            proj(POST_W, 0, 0),
+            proj(POST_W, 0, H_DRAWERS),
+            proj(0, 0, H_DRAWERS),
+          ]),
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      // Predný pravý zvislý stĺpik rámu
+      cabinetGroup.appendChild(
+        el('polygon', {
+          points: pts([
+            proj(W - POST_W, 0, 0),
+            proj(W, 0, 0),
+            proj(W, 0, H_DRAWERS),
+            proj(W - POST_W, 0, H_DRAWERS),
+          ]),
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      // Spodná hrana korpusu
+      cabinetGroup.appendChild(
+        el('line', {
+          x1: proj(0, 0, 0).x.toFixed(2),
+          y1: proj(0, 0, 0).y.toFixed(2),
+          x2: proj(W, 0, 0).x.toFixed(2),
+          y2: proj(W, 0, 0).y.toFixed(2),
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+        })
+      );
+
+      // Skupina pre názov odboru na ľavej modrej bočnici (v kľude prázdna)
+      sideNameGroup = el('g', { id: 'side-department-title', 'pointer-events': 'none' });
+      cabinetGroup.appendChild(sideNameGroup);
+
+      studioSvg.appendChild(cabinetGroup);
+
+      buildCurvedA4Sheet();
+      buildCornerNavLinks();
+
+      // 11 šuplíkov (Maliarov algoritmus: od spodného #10 po horný #0)
+      const drawersLayer = el('g', { id: 'drawers-layer' });
+
+      for (let i = DEPARTMENTS.length - 1; i >= 0; i--) {
+        const st = drawerState[i];
+        const dept = st.dept;
+
+        const g = el('g', {
+          class: 'svg-interactive',
+          tabindex: '0',
+          role: 'button',
+          'aria-label': `Otvoriť šuplík ${dept.code} — ${dept.name}`,
+          'data-index': String(i),
+        });
+
+        const openGroup = el('g', { visibility: 'hidden' });
+        const interiorMask = el('polygon', {
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '1.8',
+          'stroke-linejoin': 'round',
+        });
+        const rightWallTopLine = el('line', {
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linecap': 'round',
+        });
+        const rightWallBedLine = el('line', {
+          stroke: '#1c68a6',
+          'stroke-width': '1.6',
+          'stroke-linecap': 'round',
+        });
+        const outerLeftWall = el('polygon', {
+          fill: '#1c68a6',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        });
+
+        openGroup.appendChild(interiorMask);
+        openGroup.appendChild(rightWallTopLine);
+        openGroup.appendChild(rightWallBedLine);
+        openGroup.appendChild(outerLeftWall);
+
+        const frontFace = el('polygon', {
+          class: 'focus-ring-target',
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        });
+
+        const bevelHandle = el('polygon', {
+          fill: '#86add1',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        });
+
+        const labelHolder = el('g');
+        const labelGlyphs = createCodeGlyphGroup(dept.code, 0);
+        labelHolder.appendChild(labelGlyphs);
+        const segmentEl = labelGlyphs.querySelector('polygon');
+
+        g.appendChild(openGroup);
+        g.appendChild(frontFace);
+        g.appendChild(bevelHandle);
+        g.appendChild(labelHolder);
+
+        g.addEventListener('mouseenter', () => handleDrawerHover(i, true));
+        g.addEventListener('mouseleave', () => handleDrawerHover(i, false));
+        g.addEventListener('focus', () => handleDrawerHover(i, true));
+        g.addEventListener('blur', () => handleDrawerHover(i, false));
+        g.addEventListener('click', (evt) => {
+          evt.preventDefault();
+          openDrawerGallery(i);
+        });
+        g.addEventListener('keydown', (evt) => {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault();
+            openDrawerGallery(i);
+          }
+        });
+
+        st.dom = {
+          group: g,
+          openGroup,
+          interiorMask,
+          rightWallTopLine,
+          rightWallBedLine,
+          outerLeftWall,
+          frontFace,
+          bevelHandle,
+          labelHolder,
+          segmentEl,
+        };
+
+        drawersLayer.appendChild(g);
+        updateDrawerGeometry(i, 0, 0);
+      }
+
+      studioSvg.appendChild(drawersLayer);
+      updateSideDepartmentDisplay(-1);
+    }
+
+    function updateDrawerGeometry(index, pull, angleDeg) {
+      const st = drawerState[index];
+      const dom = st.dom;
+      if (!dom) return;
+
+      const xL = POST_W;
+      const xR = W - POST_W;
+      const zTop = H_DRAWERS - index * DRAWER_H;
+      const zBot = zTop - DRAWER_H;
+      const bevelH = 12;
+      const zBevelBot = zTop - bevelH;
+
+      const yFront = pull;
+      const yBevelTop = Math.max(0, pull - 5.5);
+
+      if (pull > 0.6) {
+        dom.openGroup.setAttribute('visibility', 'visible');
+
+        const bedZ = zTop - 15;
+
+        dom.interiorMask.setAttribute(
+          'points',
+          pts([
+            proj(xL, 0, zTop),
+            proj(xR, 0, zTop),
+            proj(xR, yBevelTop, zTop),
+            proj(xR, yFront, zBevelBot),
+            proj(xR, yFront, zBot),
+            proj(xL, yFront, zBot),
+            proj(xL, 0, zBot),
+          ])
+        );
+
+        const pRightTopBack = proj(xR, 0, zTop);
+        const pRightTopFront = proj(xR, yBevelTop, zTop);
+        const pRightBedBack = proj(xR, 0, bedZ);
+        const pRightBedFront = proj(xR, yBevelTop, bedZ);
+
+        dom.rightWallTopLine.setAttribute('x1', pRightTopBack.x.toFixed(2));
+        dom.rightWallTopLine.setAttribute('y1', pRightTopBack.y.toFixed(2));
+        dom.rightWallTopLine.setAttribute('x2', pRightTopFront.x.toFixed(2));
+        dom.rightWallTopLine.setAttribute('y2', pRightTopFront.y.toFixed(2));
+
+        dom.rightWallBedLine.setAttribute('x1', pRightBedBack.x.toFixed(2));
+        dom.rightWallBedLine.setAttribute('y1', pRightBedBack.y.toFixed(2));
+        dom.rightWallBedLine.setAttribute('x2', pRightBedFront.x.toFixed(2));
+        dom.rightWallBedLine.setAttribute('y2', pRightBedFront.y.toFixed(2));
+
+        dom.outerLeftWall.setAttribute(
+          'points',
+          pts([
+            proj(xL, 0, zBot),
+            proj(xL, yFront, zBot),
+            proj(xL, yFront, zBevelBot),
+            proj(xL, yBevelTop, zTop),
+            proj(xL, 0, zTop),
+          ])
+        );
+      } else {
+        dom.openGroup.setAttribute('visibility', 'hidden');
+      }
+
+      dom.frontFace.setAttribute(
+        'points',
+        pts([
+          proj(xL, yFront, zBot),
+          proj(xR, yFront, zBot),
+          proj(xR, yFront, zBevelBot),
+          proj(xL, yFront, zBevelBot),
+        ])
+      );
+
+      dom.bevelHandle.setAttribute(
+        'points',
+        pts([
+          proj(xL, yFront, zBevelBot),
+          proj(xR, yFront, zBevelBot),
+          proj(xR, yBevelTop, zTop),
+          proj(xL, yBevelTop, zTop),
+        ])
+      );
+
+      const codeBoxH = 19.5;
+      const codeBoxW = codeBoxH * (179.57 / 55.74);
+      const labelPadX = 12;
+      const labelPadZ = (DRAWER_H - bevelH - codeBoxH) / 2;
+
+      const p0 = proj(xL + labelPadX, yFront, zBevelBot - labelPadZ);
+      const pU = proj(xL + labelPadX + codeBoxW, yFront, zBevelBot - labelPadZ);
+      const pV = proj(xL + labelPadX, yFront, zBevelBot - labelPadZ - codeBoxH);
+
+      const scaleX = 1 / 179.57;
+      const scaleY = 1 / 55.74;
+      const a = (pU.x - p0.x) * scaleX;
+      const b = (pU.y - p0.y) * scaleX;
+      const c = (pV.x - p0.x) * scaleY;
+      const d = (pV.y - p0.y) * scaleY;
+
+      dom.labelHolder.setAttribute(
+        'transform',
+        `matrix(${a.toFixed(5)} ${b.toFixed(5)} ${c.toFixed(5)} ${d.toFixed(5)} ${p0.x.toFixed(2)} ${p0.y.toFixed(2)})`
+      );
+
+      setSegmentAngle(dom.segmentEl, angleDeg);
+    }
+
+    /**
+     * Ľavá modrá bočnica: v pokoji (activeIndex === -1) úplne prázdna.
+     * Pri nabehnutí na šuplík alebo pri otvorení zobrazí názov odboru + počet prác (bez deliacej linky).
+     */
+    function updateSideDepartmentDisplay(activeIndex) {
+      if (!sideNameGroup) return;
+      sideNameGroup.innerHTML = '';
+
+      if (activeIndex < 0) return;
+
+      const dept = DEPARTMENTS[activeIndex];
+      const works = getWorksForDepartment(dept.code);
+      const countText = formatWorksCount(works.length);
+
+      const pTopLeft = proj(0, -D, H_DRAWERS - 22);
+      const pTopRight = proj(0, 0, H_DRAWERS - 22);
+      const pBotLeft = proj(0, -D, 22);
+      const sideH = H_DRAWERS - 44;
+
+      const mat = matrixString(pTopLeft, pTopRight, pBotLeft);
+      const projected = el('g', {
+        transform: `${mat} scale(${(1 / D).toFixed(6)} ${(1 / sideH).toFixed(6)})`,
+      });
+
+      const nameClone = cloneSvgAsset(`asset-name-${dept.code}`);
+
+      if (nameClone) {
+        const scale = SIDE_USABLE_W / SIDE_ARTBOARD_WIDTH;
+        const tx = D - SIDE_MARGIN - SIDE_ARTBOARD_WIDTH * scale;
+        const ty = 22;
+        const rawBottomY = parseFloat(nameClone.getAttribute('data-bottom-y') || '135.9');
+
+        nameClone.setAttribute(
+          'transform',
+          `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${scale.toFixed(5)})`
+        );
+        nameClone.setAttribute('fill', '#ffffff');
+        projected.appendChild(nameClone);
+
+        const bottomBlockY = ty + rawBottomY * scale;
+
+        const subtitleEl = el('text', {
+          x: String(D - SIDE_MARGIN),
+          y: (bottomBlockY + 28).toFixed(1),
+          'text-anchor': 'end',
+          'font-family': "'IBM Plex Mono', monospace",
+          'font-weight': '600',
+          'font-size': '13',
+          fill: '#ffffff',
+          opacity: '0.88',
+        });
+        subtitleEl.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${dept.code} · ${countText}`;
+        projected.appendChild(subtitleEl);
+      } else {
+        const fontSize = uniformSideFontSize;
+        const lineHeight = Math.round(fontSize * 1.12);
+        const startY = 34;
+
+        dept.lines.forEach((lineStr, lineIdx) => {
+          const textEl = el('text', {
+            x: String(D - SIDE_MARGIN),
+            y: String(startY + lineIdx * lineHeight),
+            'text-anchor': 'end',
+            'font-family': "'Barlow Condensed', sans-serif",
+            'font-weight': '800',
+            'font-size': String(fontSize),
+            'letter-spacing': '-0.3',
+            fill: '#ffffff',
+          });
+          textEl.textContent = lineStr;
+          projected.appendChild(textEl);
+        });
+
+        const bottomBlockY = startY + (dept.lines.length - 1) * lineHeight;
+
+        const subtitleEl = el('text', {
+          x: String(D - SIDE_MARGIN),
+          y: String(bottomBlockY + 26),
+          'text-anchor': 'end',
+          'font-family': "'IBM Plex Mono', monospace",
+          'font-weight': '600',
+          'font-size': '13',
+          fill: '#ffffff',
+          opacity: '0.88',
+        });
+        subtitleEl.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${dept.code} · ${countText}`;
+        projected.appendChild(subtitleEl);
+      }
+
+      sideNameGroup.appendChild(projected);
+    }
+
+    /**
+     * Hodiny Pragotron napravo hore otočené na kolmú stenu rovnobežnú s ľavou bočnicou skrine
+     */
+    function buildPragotronClock() {
+      const clockGroup = el('g', { id: 'pragotron-clock' });
+
+      const xFront = 805;
+      const depth = 30;
+      const xBack = xFront + depth;
+      const yBack = -125;
+      const clockH = 190;
+      const clockW = (148 / 161) * clockH;
+      const yFront = yBack + clockW;
+      const cz0 = 335;
+
+      const wBL = proj(xBack, yBack, cz0);
+      const wBR = proj(xBack, yFront, cz0);
+      const wTR = proj(xBack, yFront, cz0 + clockH);
+      const wTL = proj(xBack, yBack, cz0 + clockH);
+
+      const fBL = proj(xFront, yBack, cz0);
+      const fBR = proj(xFront, yFront, cz0);
+      const fTR = proj(xFront, yFront, cz0 + clockH);
+      const fTL = proj(xFront, yBack, cz0 + clockH);
+
+      clockGroup.appendChild(
+        el('polygon', {
+          points: pts([fTL, fTR, wTR, wTL]),
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      clockGroup.appendChild(
+        el('polygon', {
+          points: pts([fBR, wBR, wTR, fTR]),
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      clockGroup.appendChild(
+        el('polygon', {
+          points: pts([fBL, fBR, fTR, fTL]),
+          fill: '#ffffff',
+          stroke: '#1c68a6',
+          'stroke-width': '2',
+          'stroke-linejoin': 'round',
+        })
+      );
+
+      const dialMat = matrixString(fTL, fTR, fBL);
+      const dialPlane = el('g', {
+        transform: `${dialMat} scale(${(1 / 500).toFixed(6)} ${(1 / 500).toFixed(6)})`,
+      });
+
+      const dialInner = el('g', {
+        transform: 'translate(25.755 25.755)',
+      });
+
+      const dialClone = cloneSvgAsset('asset-pragotron-dial');
+      if (dialClone) {
+        dialInner.appendChild(dialClone);
+        clockHourEl = dialClone.querySelector('.pragotron-hour');
+        clockMinEl = dialClone.querySelector('.pragotron-minute');
+      }
+
+      dialPlane.appendChild(dialInner);
+      clockGroup.appendChild(dialPlane);
+      studioSvg.appendChild(clockGroup);
+
+      updatePragotronHands();
+    }
+
+    function updatePragotronHands() {
+      if (!clockHourEl || !clockMinEl) return;
+
+      const now = new Date();
+      const s = now.getSeconds();
+      const m = now.getMinutes();
+      const h = now.getHours() % 12;
+
+      const minAngle = m * 6;
+      const hourAngle = h * 30 + m * 0.5;
+      const cx = 224.245;
+      const cy = 224.245;
+
+      let bounce = 0;
+      if (s === 0 && now.getMilliseconds() < 260) {
+        const t = now.getMilliseconds() / 260;
+        bounce = Math.sin(t * Math.PI * 2.5) * 1.4 * (1 - t);
+      }
+
+      clockHourEl.setAttribute('transform', `rotate(${hourAngle.toFixed(2)} ${cx} ${cy})`);
+      clockMinEl.setAttribute('transform', `rotate(${(minAngle + bounce).toFixed(2)} ${cx} ${cy})`);
+    }
+
+    function buildCurvedA4Sheet() {
+      sheetA4Group = el('g', {
+        id: 'curved-a4-sheet',
+        class: 'svg-interactive',
+        tabindex: '0',
+        role: 'button',
+        'aria-label': 'Otvoriť info list A4 o škole ŠUP Košice',
+      });
+
+      a4InnerWrap = cloneSvgAsset('asset-curved-a4') || el('g');
+      sheetA4Group.appendChild(a4InnerWrap);
+
+      const a4Path = a4InnerWrap.querySelector('.a4-paper-path');
+      const a4Glyphs = a4InnerWrap.querySelector('.a4-info-glyphs');
+
+      const setA4Hover = (isActive) => {
+        a4TargetSlide = isActive ? 1 : 0;
+        const color = isActive ? '#f15b40' : '#1c68a6';
+        if (a4Path) a4Path.setAttribute('stroke', color);
+        if (a4Glyphs) a4Glyphs.setAttribute('fill', color);
+      };
+
+      sheetA4Group.addEventListener('mouseenter', () => setA4Hover(true));
+      sheetA4Group.addEventListener('mouseleave', () => setA4Hover(false));
+      sheetA4Group.addEventListener('focus', () => setA4Hover(true));
+      sheetA4Group.addEventListener('blur', () => setA4Hover(false));
+      sheetA4Group.addEventListener('click', openInfoModal);
+      sheetA4Group.addEventListener('keydown', (evt) => {
+        if (evt.key === 'Enter' || evt.key === ' ') {
+          evt.preventDefault();
+          openInfoModal();
+        }
+      });
+
+      studioSvg.appendChild(sheetA4Group);
+      renderCurvedA4Sheet(0);
+    }
+
+    function renderCurvedA4Sheet(slide) {
+      if (!a4InnerWrap) return;
+
+      const foldContact = proj(0, -215, 0);
+      const scale = 0.50;
+      const baseX = foldContact.x - 212.26 * scale;
+      const baseY = foldContact.y - 144.5 * scale;
+      const dx = -slide * 14;
+      const dy = slide * 4.5;
+
+      a4InnerWrap.setAttribute(
+        'transform',
+        `translate(${(baseX + dx).toFixed(2)} ${(baseY + dy).toFixed(2)}) scale(${scale})`
+      );
+    }
+
+    function buildCornerNavLinks() {
+      const navGroup = el('g', {
+        id: 'corner-nav-links',
+        transform: 'translate(1435 848)',
+      });
+
+      const items = [
+        { label: 'info A4', y: 0, onClick: openInfoModal },
+        {
+          label: '2D zoznam',
+          y: 38,
+          onClick: () => {
+            const toggleBtn = document.getElementById('toggle-2d-btn');
+            const is2D = document.body.classList.toggle('force-2d');
+            if (toggleBtn) {
+              toggleBtn.classList.toggle('is-active', is2D);
+              toggleBtn.textContent = is2D ? '3D skriňa' : '2D zoznam';
+            }
+          },
+        },
+      ];
+
+      items.forEach((item) => {
+        const g = el('g', {
+          class: 'corner-nav-link',
+          tabindex: '0',
+          role: 'button',
+          'aria-label': item.label,
+          transform: `translate(0 ${item.y})`,
+        });
+
+        g.appendChild(
+          el('rect', {
+            x: '-145',
+            y: '-18',
+            width: '155',
+            height: '32',
+            fill: 'transparent',
+          })
+        );
+
+        const txt = el('text', {
+          x: '-24',
+          y: '5',
+          'text-anchor': 'end',
+          'font-family': 'var(--font-display)',
+          'font-weight': '700',
+          'font-size': '21',
+          'letter-spacing': '0.3',
+          fill: '#1c68a6',
+        });
+        txt.textContent = item.label;
+        g.appendChild(txt);
+
+        const chevWrap = el('g', { class: 'nav-chevron' });
+        chevWrap.appendChild(
+          el('polyline', {
+            points: '-3,-8 -13,0 -3,8',
+            fill: 'none',
+            stroke: '#f15b40',
+            'stroke-width': '3.4',
+            'stroke-linecap': 'square',
+            'stroke-linejoin': 'miter',
+          })
+        );
+        g.appendChild(chevWrap);
+
+        g.addEventListener('click', item.onClick);
+        g.addEventListener('keydown', (evt) => {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault();
+            item.onClick();
+          }
+        });
+
+        navGroup.appendChild(g);
+      });
+
+      studioSvg.appendChild(navGroup);
+    }
+
+    function handleDrawerHover(index, isEntering) {
+      if (isEntering) {
+        hoveredDrawerIdx = index;
+      } else if (hoveredDrawerIdx === index) {
+        hoveredDrawerIdx = -1;
+      }
+
+      syncDrawerTargets();
+      const activeIdx = openedDrawerIdx >= 0 ? openedDrawerIdx : hoveredDrawerIdx;
+      updateSideDepartmentDisplay(activeIdx);
+    }
+
+    function syncDrawerTargets() {
+      drawerState.forEach((st, idx) => {
+        if (idx === openedDrawerIdx) {
+          st.targetPull = 152;
+          st.targetAngle = 45;
+        } else if (idx === hoveredDrawerIdx) {
+          st.targetPull = 28;
+          st.targetAngle = 45;
+        } else {
+          st.targetPull = 0;
+          st.targetAngle = 0;
+        }
+      });
+    }
+
+    let lastClockTick = 0;
+    function animationLoop(timestamp) {
+      for (let i = 0; i < drawerState.length; i++) {
+        const st = drawerState[i];
+        const pullDiff = st.targetPull - st.currentPull;
+        const angleDiff = st.targetAngle - st.currentAngle;
+
+        if (Math.abs(pullDiff) > 0.04 || Math.abs(angleDiff) > 0.08) {
+          st.currentPull += pullDiff * 0.2;
+          st.currentAngle += angleDiff * 0.24;
+          if (Math.abs(pullDiff) <= 0.04) st.currentPull = st.targetPull;
+          if (Math.abs(angleDiff) <= 0.08) st.currentAngle = st.targetAngle;
+          updateDrawerGeometry(i, st.currentPull, st.currentAngle);
+        }
+      }
+
+      const slideDiff = a4TargetSlide - a4CurrentSlide;
+      if (Math.abs(slideDiff) > 0.005) {
+        a4CurrentSlide += slideDiff * 0.18;
+        if (Math.abs(a4TargetSlide - a4CurrentSlide) <= 0.005) a4CurrentSlide = a4TargetSlide;
+        renderCurvedA4Sheet(a4CurrentSlide);
+      }
+
+      if (timestamp - lastClockTick > 180) {
+        lastClockTick = timestamp;
+        updatePragotronHands();
+      }
+
+      requestAnimationFrame(animationLoop);
+    }
+
+    function buildCodeBadgeSvg(code, width, height, rotated = false, hoverable = false) {
+      const svg = el('svg', {
+        width: String(width),
+        height: String(height),
+        viewBox: '0 0 179.57 55.74',
+        'aria-hidden': 'true',
+      });
+      if (hoverable) svg.setAttribute('class', 'shrink-0');
+
+      const letters = cloneSvgAsset(`asset-code-${code}`);
+      if (letters) svg.appendChild(letters);
+
+      const segAttrs = {
+        points: CORNER_SEGMENT_POINTS,
+        fill: '#f15b40',
+      };
+      if (hoverable) {
+        segAttrs.class = 'row-segment-icon';
+      } else if (rotated) {
+        segAttrs.transform = `rotate(45 ${CORNER_PIVOT.x} ${CORNER_PIVOT.y})`;
+      }
+      svg.appendChild(el('polygon', segAttrs));
+      return svg;
+    }
+
+    function buildMobileList() {
+      const container = document.getElementById('mobile-rows-container');
+      container.innerHTML = '';
+
+      DEPARTMENTS.forEach((dept, idx) => {
+        const works = getWorksForDepartment(dept.code);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'drawer-row-card';
+
+        const leftWrap = document.createElement('div');
+        leftWrap.className = 'flex items-center gap-3 min-w-0';
+        leftWrap.appendChild(buildCodeBadgeSvg(dept.code, 72, 24, false, true));
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'min-w-0';
+        infoDiv.innerHTML = `
+          <div class="font-bold text-base uppercase truncate" style="font-family: var(--font-display); color: var(--cobalt);">
+            ${escapeHtml(dept.name)}
+          </div>
+          <div class="text-xs" style="font-family: var(--font-mono); opacity: 0.7;">
+            ${String(idx + 1).padStart(2, '0')} · ${formatWorksCount(works.length)}
+          </div>
+        `;
+        leftWrap.appendChild(infoDiv);
+
+        const openSpan = document.createElement('span');
+        openSpan.className = 'text-xs font-semibold uppercase px-2.5 py-1 rounded shrink-0';
+        openSpan.style.fontFamily = 'var(--font-mono)';
+        openSpan.style.border = '1px solid var(--cobalt)';
+        openSpan.textContent = 'Otvoriť';
+
+        btn.appendChild(leftWrap);
+        btn.appendChild(openSpan);
+        btn.addEventListener('click', () => openDrawerGallery(idx));
+        container.appendChild(btn);
+      });
+    }
+
+    const galleryOverlay = document.getElementById('gallery-overlay');
+    const masonryContainer = document.getElementById('masonry-container');
+    const sheetTitle = document.getElementById('sheet-title');
+    const sheetSubtitle = document.getElementById('sheet-subtitle');
+    const sheetCodeBadge = document.getElementById('sheet-code-badge');
+    const sheetScrollArea = document.getElementById('sheet-scroll-area');
+
+    let currentGalleryWorks = [];
+    let currentLightboxIndex = 0;
+
+    async function openDrawerGallery(index) {
+      openedDrawerIdx = index;
+      syncDrawerTargets();
+      updateSideDepartmentDisplay(index);
+
+      const dept = DEPARTMENTS[index];
+      sheetTitle.textContent = dept.name;
+      sheetCodeBadge.innerHTML = '';
+      sheetCodeBadge.appendChild(buildCodeBadgeSvg(dept.code, 86, 28, true, false));
+      sheetSubtitle.textContent = `/galeria/${dept.folder}/ · načítavam práce...`;
+      masonryContainer.innerHTML = '';
+
+      setTimeout(() => {
+        if (openedDrawerIdx === index) {
+          galleryOverlay.classList.add('is-open');
+          sheetScrollArea.scrollTop = 0;
+        }
+      }, 170);
+
+      const works = await fetchDepartmentWorks(dept);
+      if (openedDrawerIdx !== index) return;
+
+      currentGalleryWorks = works;
+      sheetSubtitle.textContent = works.length
+        ? `/galeria/${dept.folder}/ · ${formatWorksCount(works.length)} (zoradené od najnovších)`
+        : `/galeria/${dept.folder}/ · zatiaľ bez prác`;
+      renderRowFirstMasonry(works, dept);
+    }
+
+    function closeDrawerGallery() {
+      galleryOverlay.classList.remove('is-open');
+      openedDrawerIdx = -1;
+      syncDrawerTargets();
+      updateSideDepartmentDisplay(hoveredDrawerIdx);
+    }
+
+    function getMasonryColumnCount() {
+      const w = window.innerWidth;
+      if (w < 640) return 1;
+      if (w < 980) return 2;
+      if (w < 1280) return 3;
+      return 4;
+    }
+
+    function renderRowFirstMasonry(works, dept) {
+      masonryContainer.innerHTML = '';
+      if (!works.length) {
+        const folderLabel = dept ? `/galeria/${dept.folder}/` : '/galeria/';
+        masonryContainer.innerHTML = `
+          <div
+            class="w-full py-16 px-6 text-center rounded-lg"
+            style="border: 1.5px dashed rgba(28, 104, 166, 0.38);"
+          >
+            <div
+              class="text-2xl font-extrabold uppercase tracking-tight mb-2"
+              style="font-family: var(--font-display); color: var(--cobalt);"
+            >
+              Zatiaľ bez prác
+            </div>
+            <p
+              class="text-xs max-w-md mx-auto leading-relaxed"
+              style="font-family: var(--font-mono); color: var(--cobalt); opacity: 0.72;"
+            >
+              V priečinku <strong>${escapeHtml(folderLabel)}</strong> zatiaľ nie sú nahraté žiadne obrázky.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      const colCount = getMasonryColumnCount();
+      const cols = [];
+      const colHeights = new Array(colCount).fill(0);
+
+      for (let c = 0; c < colCount; c++) {
+        const colDiv = document.createElement('div');
+        colDiv.className = 'masonry-col';
+        masonryContainer.appendChild(colDiv);
+        cols.push(colDiv);
+      }
+
+      works.forEach((work, idx) => {
+        let targetCol = 0;
+        if (idx < colCount) {
+          targetCol = idx;
+        } else {
+          let minH = colHeights[0];
+          for (let c = 1; c < colCount; c++) {
+            if (colHeights[c] < minH) {
+              minH = colHeights[c];
+              targetCol = c;
+            }
+          }
+        }
+
+        const aspectH = (work.height || 800) / (work.width || 800);
+        colHeights[targetCol] += aspectH + 0.14;
+
+        const metaLine = [work.author, work.year].filter(Boolean).join(' · ');
+
+        const card = document.createElement('article');
+        card.className = 'work-card';
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `${work.title}${work.author ? ' — ' + work.author : ''}`);
+
+        const img = document.createElement('img');
+        img.src = work.thumbUrl;
+        img.alt = work.author ? `${work.title} — ${work.author}` : work.title;
+        img.width = work.width;
+        img.height = work.height;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        if (work.thumbUrl !== work.fullUrl) {
+          img.addEventListener('error', () => {
+            if (img.src !== work.fullUrl) img.src = work.fullUrl;
+          }, { once: true });
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'work-meta';
+        meta.innerHTML = `
+          <div class="min-w-0">
+            <div class="font-semibold truncate" style="color: var(--cobalt);">${escapeHtml(work.title)}</div>
+            ${metaLine ? `<div class="text-xs truncate opacity-75" style="font-family: var(--font-mono);">${escapeHtml(metaLine)}</div>` : ''}
+          </div>
+          ${work.isNew ? '<span class="badge-new">NOVÉ</span>' : ''}
+        `;
+
+        card.appendChild(img);
+        card.appendChild(meta);
+
+        card.addEventListener('click', () => openLightbox(idx));
+        card.addEventListener('keydown', (evt) => {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault();
+            openLightbox(idx);
+          }
+        });
+
+        cols[targetCol].appendChild(card);
+      });
+    }
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+
+    function openLightbox(workIndex) {
+      if (!currentGalleryWorks.length) return;
+      currentLightboxIndex = (workIndex + currentGalleryWorks.length) % currentGalleryWorks.length;
+      const work = currentGalleryWorks[currentLightboxIndex];
+      lightboxImg.src = work.fullUrl;
+      lightboxImg.alt = work.author ? `${work.title} — ${work.author}` : work.title;
+
+      const labelParts = [
+        `${currentLightboxIndex + 1} / ${currentGalleryWorks.length}`,
+        work.author ? `${work.author} — ${work.title}` : work.title,
+      ];
+      lightboxCaption.textContent = work.year
+        ? `${labelParts.join(' · ')} (${work.year})`
+        : labelParts.join(' · ');
+
+      lightbox.classList.add('is-open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+    }
+
+    const infoModal = document.getElementById('info-modal');
+    function openInfoModal() {
+      infoModal.classList.add('is-open');
+    }
+    function closeInfoModal() {
+      infoModal.classList.remove('is-open');
+    }
+
+    function buildInfoModalDepartments() {
+      const wrap = document.getElementById('info-departments-grid');
+      wrap.innerHTML = '';
+      DEPARTMENTS.forEach((dept, idx) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'pill-btn';
+        chip.textContent = `${dept.code} · ${dept.name}`;
+        chip.addEventListener('click', () => {
+          closeInfoModal();
+          openDrawerGallery(idx);
+        });
+        wrap.appendChild(chip);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const logoSlot = document.getElementById('brand-logo-slot');
+      const logoClone = cloneSvgAsset('asset-brand-logo');
+      if (logoSlot && logoClone) logoSlot.appendChild(logoClone);
+
+      computeUniformSideFontSize();
+      buildScene();
+      buildMobileList();
+      buildInfoModalDepartments();
+      loadGalleryManifest();
+      requestAnimationFrame(animationLoop);
+
+      document.getElementById('close-sheet-btn').addEventListener('click', closeDrawerGallery);
+      galleryOverlay.addEventListener('click', (evt) => {
+        if (evt.target === galleryOverlay) closeDrawerGallery();
+      });
+
+      document.getElementById('prev-drawer-btn').addEventListener('click', () => {
+        if (openedDrawerIdx < 0) return;
+        const prev = (openedDrawerIdx - 1 + DEPARTMENTS.length) % DEPARTMENTS.length;
+        openDrawerGallery(prev);
+      });
+
+      document.getElementById('next-drawer-btn').addEventListener('click', () => {
+        if (openedDrawerIdx < 0) return;
+        const next = (openedDrawerIdx + 1) % DEPARTMENTS.length;
+        openDrawerGallery(next);
+      });
+
+      document.getElementById('open-info-btn').addEventListener('click', openInfoModal);
+      document.getElementById('close-info-btn').addEventListener('click', closeInfoModal);
+      infoModal.addEventListener('click', (evt) => {
+        if (evt.target === infoModal) closeInfoModal();
+      });
+
+      document.getElementById('close-lightbox-btn').addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (evt) => {
+        if (evt.target === lightbox) closeLightbox();
+      });
+      document.getElementById('lb-prev-btn').addEventListener('click', () => openLightbox(currentLightboxIndex - 1));
+      document.getElementById('lb-next-btn').addEventListener('click', () => openLightbox(currentLightboxIndex + 1));
+
+      const toggleBtn = document.getElementById('toggle-2d-btn');
+      toggleBtn.addEventListener('click', () => {
+        const is2D = document.body.classList.toggle('force-2d');
+        toggleBtn.classList.toggle('is-active', is2D);
+        toggleBtn.textContent = is2D ? '3D skriňa' : '2D zoznam';
+      });
+
+      window.addEventListener('keydown', (evt) => {
+        if (evt.key === 'Escape') {
+          if (lightbox.classList.contains('is-open')) {
+            closeLightbox();
+          } else if (infoModal.classList.contains('is-open')) {
+            closeInfoModal();
+          } else if (galleryOverlay.classList.contains('is-open')) {
+            closeDrawerGallery();
+          }
+        } else if (lightbox.classList.contains('is-open')) {
+          if (evt.key === 'ArrowLeft') openLightbox(currentLightboxIndex - 1);
+          if (evt.key === 'ArrowRight') openLightbox(currentLightboxIndex + 1);
+        } else if (galleryOverlay.classList.contains('is-open')) {
+          if (evt.key === 'ArrowUp') {
+            evt.preventDefault();
+            openDrawerGallery((openedDrawerIdx - 1 + DEPARTMENTS.length) % DEPARTMENTS.length);
+          } else if (evt.key === 'ArrowDown') {
+            evt.preventDefault();
+            openDrawerGallery((openedDrawerIdx + 1) % DEPARTMENTS.length);
+          }
+        }
+      });
+
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (galleryOverlay.classList.contains('is-open') && openedDrawerIdx >= 0) {
+            renderRowFirstMasonry(currentGalleryWorks, DEPARTMENTS[openedDrawerIdx]);
+          }
+        }, 120);
+      });
+    });
+  </script>
+
+  <!-- CENTRÁLNE ÚLOŽISKO VŠETKÝCH VEKTOROVÝCH KRIVIEK (LOGO, SKRATKY, NÁZVY, PRAGOTRON, LIST A4) -->
+  <template id="svg-assets">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <!-- LOGO -->
+      <svg id="asset-brand-logo" class="brand-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440.49 257.98" aria-hidden="true">
+      <g fill="#1c68a6">
+      <path d="M83.43,68.7c13.79,0,22.07,8.99,22.07,22.14h-16.16c0-4.24-2.13-7.64-6.07-7.64s-5.75,2.38-5.75,5.09c0,9.76,28.77,5.34,28.77,27.57,0,12.73-10.25,20.02-22.07,20.02-13.4,0-23.65-6.87-23.65-22.14h16.16c0,4.92,2.92,7.64,7.49,7.64,3.94,0,6.31-2.29,6.31-5.51,0-9.33-28.77-3.99-28.77-27.57,0-11.45,9.22-19.6,21.68-19.6ZM83.43,67.51l-17.89-8.57,4.18-9.59,13.72,6.45,13.72-6.45,4.1,9.59-17.81,8.57Z"/>
+      <path d="M112.2,111.46v-40.98h15.77v38.86c0,8.06,1.97,12.05,7.09,12.05s7.09-3.99,7.09-12.05v-38.86h15.77v40.98c0,14-8.67,24.43-22.86,24.43s-22.86-10.43-22.86-24.43Z"/>
+      <path d="M182.74,134.11h-15.77v-63.63h24.44c11.75,0,20.5,8.31,20.5,19.51v2.54c0,13.15-9.85,22.06-20.89,22.06h-8.28v19.51ZM182.74,100.6h4.34c4.89,0,8.67-2.71,8.67-8.06s-2.6-8.06-7.88-8.06h-5.12v16.12Z"/>
+      <path d="M232.4,134.11h-15.37v-68.72h15.37v68.72Z"/>
+      <path d="M238.07,70.48l17.18-11.71,5.28,9.42-17.89,10.77-4.57-8.48ZM256.44,134.11h-15.37v-52.18h15.37v52.18Z"/>
+      <path d="M280.4,105.26l13.24-23.33h15.61l-15.13,24.35,16.32,27.83h-17.03l-13.01-22.06v22.06h-15.29v-68.72h15.29v39.87Z"/>
+      <path d="M350.63,115.02c0,13.15-9.46,20.45-20.5,20.45s-20.49-7.3-20.49-20.45v-14c0-13.15,9.46-20.45,20.49-20.45s20.5,7.3,20.5,20.45v14ZM335.26,113.75v-11.45c0-5.94-1.58-9.33-5.12-9.33s-5.12,3.39-5.12,9.33v11.45c0,5.94,1.58,9.33,5.12,9.33s5.12-3.39,5.12-9.33Z"/>
+      <path d="M396.35,81.93l-14.82,52.18h-15.37l-14.74-52.18h15.13l7.49,31.39,7.49-31.39h14.82Z"/>
+      <path d="M436.55,101.02v33.09h-13.4v-7.38c-2.29,5.09-7.41,8.23-12.22,8.23-8.51,0-14.98-5.26-14.98-14.42,0-16.71,25.22-13.32,25.22-22.65,0-2.63-1.58-4.92-4.33-4.92-3.78,0-4.73,3.39-4.73,8.48h-15.37c0-12.73,7.88-20.87,20.1-20.87s19.71,8.57,19.71,20.45ZM407.94,70.48l17.18-11.71,5.28,9.42-17.89,10.77-4.57-8.48ZM421.18,115.44v-5.51c-4.97,4.33-9.85,3.99-9.85,8.91,0,2.38,1.73,4.24,3.94,4.24,3,0,5.91-2.54,5.91-7.64Z"/>
+      <path d="M86.98,228.8c-2.76,2.55-5.44,3.73-9.06,3.73-8.67,0-16.55-6.79-16.55-19.94v-9.76c0-13.15,7.88-19.94,16.55-19.94,5.2,0,8.43,3.05,11.04,7.8v-6.96h13.4v49.21c0,13.15-9.46,20.45-20.5,20.45-12.22,0-20.1-8.57-20.5-17.48h15.37c.39,2.12,1.58,5.09,5.12,5.09s5.12-2.12,5.12-9.33v-2.88ZM76.73,204.11v7.21c0,5.94,1.58,8.91,5.12,8.91s5.12-3.56,5.12-8.91v-7.21c0-5.26-1.58-8.91-5.12-8.91s-5.12,2.97-5.12,8.91Z"/>
+      <path d="M149.25,202.84v33.09h-13.4v-7.38c-2.29,5.09-7.41,8.23-12.22,8.23-8.51,0-14.98-5.26-14.98-14.42,0-16.71,25.22-13.32,25.22-22.65,0-2.63-1.58-4.92-4.34-4.92-3.78,0-4.73,3.39-4.73,8.48h-15.37c0-12.73,7.88-20.87,20.1-20.87s19.71,8.57,19.71,20.45ZM133.87,217.26v-5.51c-4.97,4.33-9.85,3.99-9.85,8.91,0,2.38,1.73,4.24,3.94,4.24,3,0,5.91-2.54,5.91-7.64Z"/>
+      <path d="M172.89,235.92h-15.37v-68.72h15.37v68.72Z"/>
+      <path d="M195.35,213.87v1.7c0,5.94,1.58,9.33,5.12,9.33,3.15,0,4.34-2.54,4.73-5.09h15.37c-.39,8.74-7.88,17.48-20.1,17.48-11.04,0-20.5-7.3-20.5-20.45v-14c0-13.15,9.46-20.45,20.5-20.45s20.5,7.3,20.5,20.45v11.03h-25.62ZM191.18,172.3l17.18-11.71,5.28,9.42-17.89,10.77-4.57-8.48ZM195.35,204.11v1.27h10.25v-1.27c0-5.94-1.58-9.33-5.12-9.33s-5.12,3.39-5.12,9.33Z"/>
+      <path d="M254.47,183.32v16.12h-1.97c-3.94,0-9.07.68-9.07,5.51v30.97h-15.37v-52.18h13.4v8.4c2.29-5.51,6.07-8.82,10.25-8.82h2.76Z"/>
+      <path d="M276.15,178.66h-15.37v-11.45h15.37v11.45ZM276.15,235.92h-15.37v-52.18h15.37v52.18Z"/>
+      <path d="M323.05,202.84v33.09h-13.4v-7.38c-2.29,5.09-7.41,8.23-12.22,8.23-8.51,0-14.98-5.26-14.98-14.42,0-16.71,25.22-13.32,25.22-22.65,0-2.63-1.58-4.92-4.33-4.92-3.78,0-4.73,3.39-4.73,8.48h-15.37c0-12.73,7.88-20.87,20.1-20.87s19.71,8.57,19.71,20.45ZM307.67,217.26v-5.51c-4.97,4.33-9.85,3.99-9.85,8.91,0,2.38,1.73,4.24,3.94,4.24,3,0,5.91-2.54,5.91-7.64Z"/>
+      </g>
+      <polygon points="0 33.53 0 134.11 33.53 134.11 33.53 33.53 134.11 33.53 134.11 0 33.53 0 0 0 0 33.53" fill="#f15b40"/>
+      </svg>
+
+      <!-- 11 SKRATIEK ODBOROV -->
+      <g id="asset-code-ANI">
+        <path d="M94.89,35.86h-9.42l-1.56,7.42h-9.1l9.42-37.09h12.18l9.42,37.09h-9.33l-1.61-7.42ZM87.08,28.19h6.11l-3.08-14.29-3.03,14.29Z" fill="#1c68a6"/>
+        <path d="M115.24,19.69v23.59h-8.04V6.19h10.34l8.27,23.59V6.19h8.04v37.09h-10.34l-8.27-23.59Z" fill="#1c68a6"/>
+        <path d="M138.91,6.19h9.19v37.09h-9.19V6.19Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-DDA">
+        <path d="M91.35,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM90.43,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+        <path d="M121.67,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM120.76,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+        <path d="M155.08,35.86h-9.42l-1.56,7.42h-9.1l9.42-37.09h12.18l9.42,37.09h-9.33l-1.61-7.42ZM147.27,28.19h6.11l-3.08-14.29-3.03,14.29Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-DEX">
+        <path d="M91.35,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM90.43,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+        <path d="M130.86,43.28h-22.05V6.19h22.05v8.16h-12.86v6.18h11.49v8.16h-11.49v6.43h12.86v8.16Z" fill="#1c68a6"/>
+        <path d="M151.31,24.73l10.11,18.54h-9.88l-5.51-11.28-5.51,11.28h-9.65l10.11-18.54-10.11-18.55h9.88l5.51,11.28,5.51-11.28h9.65l-10.11,18.55Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-DIM">
+        <path d="M91.35,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM90.43,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+        <path d="M108.81,6.19h9.19v37.09h-9.19V6.19Z" fill="#1c68a6"/>
+        <path d="M137.53,43.28l-6.43-27.2v27.2h-8.04V6.19h12.86l5.74,25.96,5.74-25.96h12.87v37.09h-8.04v-27.2l-6.43,27.2h-8.27Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-FOD">
+        <path d="M78.49,43.28V6.19h21.59v8.16h-12.41v6.43h11.03v8.16h-11.03v14.34h-9.19Z" fill="#1c68a6"/>
+        <path d="M129.49,19.29v10.88c0,8.16-5.51,14.14-13.78,14.14s-13.78-5.98-13.78-14.14v-10.88c0-8.16,5.51-14.14,13.78-14.14s13.78,5.98,13.78,14.14ZM120.07,20.53c0-4.7-1.38-6.92-4.37-6.92s-4.36,2.23-4.36,6.92v8.41c0,4.7,1.38,6.92,4.36,6.92s4.37-2.23,4.37-6.92v-8.41Z" fill="#1c68a6"/>
+        <path d="M146.03,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM145.11,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-GDI">
+        <path d="M90.89,22.75h13.78v7.42c0,7.67-5.51,14.14-13.78,14.14s-13.78-5.98-13.78-14.14v-10.88c0-8.16,5.51-14.14,13.78-14.14s13.78,5.98,13.78,13.65h-9.42c-.23-3.07-1.38-5.19-4.37-5.19s-4.36,2.23-4.36,6.92v8.41c0,4.7,1.61,6.92,4.59,6.92,2.67,0,4.5-1.73,4.59-5.19h-4.82v-7.91Z" fill="#1c68a6"/>
+        <path d="M121.22,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM120.3,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+        <path d="M138.68,6.19h9.19v37.09h-9.19V6.19Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-GPD">
+        <path d="M90.89,22.75h13.78v7.42c0,7.67-5.51,14.14-13.78,14.14s-13.78-5.98-13.78-14.14v-10.88c0-8.16,5.51-14.14,13.78-14.14s13.78,5.98,13.78,13.65h-9.42c-.23-3.07-1.38-5.19-4.37-5.19s-4.36,2.23-4.36,6.92v8.41c0,4.7,1.61,6.92,4.59,6.92,2.67,0,4.5-1.73,4.59-5.19h-4.82v-7.91Z" fill="#1c68a6"/>
+        <path d="M117.54,43.28h-9.19V6.19h14.24c6.85,0,11.95,4.85,11.95,11.37v1.48c0,7.67-5.74,12.86-12.17,12.86h-4.82v11.37ZM117.54,23.74h2.53c2.85,0,5.05-1.58,5.05-4.7s-1.52-4.7-4.59-4.7h-2.99v9.4Z" fill="#1c68a6"/>
+        <path d="M149.93,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM149.01,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-KRM">
+        <path d="M97.28,43.28l-9.6-16.76v16.76h-9.19V6.19h9.19v16.17l8.73-16.17h9.28l-9.42,16.52,11.85,20.57h-10.84Z" fill="#1c68a6"/>
+        <path d="M118.23,43.28h-9.19V6.19h14.24c7.12,0,11.95,4.6,11.95,10.88v1.48c0,4.45-2.25,7.96-5.33,10.09l7.63,14.64h-10.48l-6.11-12.36h-2.71v12.36ZM118.23,22.75h2.99c3.08,0,4.59-1.73,4.59-4.2,0-2.97-1.15-4.2-4.59-4.2h-2.99v8.41Z" fill="#1c68a6"/>
+        <path d="M154.3,43.28l-6.43-27.2v27.2h-8.04V6.19h12.86l5.74,25.96,5.74-25.96h12.87v37.09h-8.04v-27.2l-6.43,27.2h-8.27Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-ODE">
+        <path d="M104.67,19.29v10.88c0,8.16-5.51,14.14-13.78,14.14s-13.78-5.98-13.78-14.14v-10.88c0-8.16,5.51-14.14,13.78-14.14s13.78,5.98,13.78,14.14ZM95.26,20.53c0-4.7-1.38-6.92-4.37-6.92s-4.36,2.23-4.36,6.92v8.41c0,4.7,1.38,6.92,4.36,6.92s4.37-2.23,4.37-6.92v-8.41Z" fill="#1c68a6"/>
+        <path d="M121.22,43.28h-12.86V6.19h12.86c8.27,0,13.78,4.95,13.78,13.85v9.4c0,8.9-5.51,13.85-13.78,13.85ZM120.3,14.35h-2.76v20.77h2.76c3.91,0,5.28-1.98,5.28-6.92v-6.92c0-4.95-1.38-6.92-5.28-6.92Z" fill="#1c68a6"/>
+        <path d="M160.73,43.28h-22.05V6.19h22.05v8.16h-12.86v6.18h11.49v8.16h-11.49v6.43h12.86v8.16Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-PRV">
+        <path d="M87.67,43.28h-9.19V6.19h14.24c6.85,0,11.95,4.85,11.95,11.37v1.48c0,7.67-5.74,12.86-12.17,12.86h-4.82v11.37ZM87.67,23.74h2.53c2.85,0,5.05-1.58,5.05-4.7s-1.52-4.7-4.59-4.7h-2.99v9.4Z" fill="#1c68a6"/>
+        <path d="M116.39,43.28h-9.19V6.19h14.24c7.12,0,11.95,4.6,11.95,10.88v1.48c0,4.45-2.25,7.96-5.33,10.09l7.63,14.64h-10.48l-6.11-12.36h-2.71v12.36ZM116.39,22.75h2.99c3.08,0,4.59-1.73,4.59-4.2,0-2.97-1.15-4.2-4.59-4.2h-2.99v8.41Z" fill="#1c68a6"/>
+        <path d="M149.11,31.56l6.11-25.37h9.19l-10.34,37.09h-10.11l-10.34-37.09h9.42l6.06,25.37Z" fill="#1c68a6"/>
+      </g>
+      <g id="asset-code-SCE">
+        <path d="M89.97,5.15c8.04,0,12.86,5.24,12.86,12.91h-9.42c0-2.47-1.24-4.45-3.54-4.45s-3.35,1.38-3.35,2.97c0,5.69,16.77,3.12,16.77,16.07,0,7.42-5.97,11.67-12.86,11.67-7.81,0-13.78-4.01-13.78-12.91h9.42c0,2.87,1.7,4.45,4.37,4.45,2.3,0,3.68-1.34,3.68-3.21,0-5.44-16.77-2.32-16.77-16.07,0-6.68,5.38-11.42,12.63-11.42Z" fill="#1c68a6"/>
+        <path d="M132.24,29.43c0,8.9-5.05,14.89-13.32,14.89s-13.78-5.98-13.78-14.14v-10.88c0-8.16,5.51-14.14,13.78-14.14s13.32,5.98,13.32,14.89h-9.19c-.23-3.96-1.24-6.43-4.13-6.43s-4.36,2.23-4.36,6.92v8.41c0,4.7,1.38,6.92,4.36,6.92s3.91-2.72,4.13-6.43h9.19Z" fill="#1c68a6"/>
+        <path d="M157.74,43.28h-22.05V6.19h22.05v8.16h-12.86v6.18h11.49v8.16h-11.49v6.43h12.86v8.16Z" fill="#1c68a6"/>
+      </g>
+
+      <!-- 11 NÁZVOV ODBOROV PRE ĽAVÚ MODRÚ BOČNICU -->
+      <g id="asset-name-ANI" data-bottom-y="135.9" data-lines="2">
+        <path d="M176.25,43.5h-11.43l-1.9,9h-11.04l11.43-45h14.77l11.43,45h-11.32l-1.95-9ZM166.77,34.2h7.41l-3.73-17.34-3.68,17.34Z"/>
+        <path d="M201.5,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M234.66,52.5h-10.87V15.6h10.87v36.9ZM229.2,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM229.2,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M268.1,52.5h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,5.02-5.82,8.47-5.82,4.57,0,7.41,2.4,9.03,5.88,2.12-3.54,5.24-5.88,8.53-5.88,6.86,0,10.48,5.4,10.48,13.8v23.7h-10.87v-22.8c0-3.3-1.12-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8Z"/>
+        <path d="M318.27,39c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM307.4,38.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M349.48,15.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M376.8,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM365.93,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M392.4,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M441.73,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM423.06,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM430.86,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M276.47,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M327.47,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M355.89,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM345.02,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M378.47,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M391.29,124.5h-9.48v-48.6h10.87v14.16c1.95-1.92,3.96-3.06,6.69-3.06,5.85,0,11.43,4.8,11.43,14.1v9.9c0,9.3-5.57,14.1-11.71,14.1-3.68,0-5.96-2.04-7.8-5.46v4.86ZM399.93,110.1v-8.1c0-4.2-1.12-6.3-3.62-6.3s-3.62,2.58-3.62,6.3v8.1c0,3.78,1.11,6.3,3.62,6.3s3.62-2.1,3.62-6.3Z"/>
+        <path d="M441.73,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM430.86,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+      </g>
+      <g id="asset-name-DDA" data-bottom-y="207.9" data-lines="3">
+        <path d="M301.83,52.5h-15.61V7.5h15.61c10.03,0,16.72,6,16.72,16.8v11.4c0,10.8-6.69,16.8-16.72,16.8ZM300.71,17.4h-3.34v25.2h3.34c4.74,0,6.41-2.4,6.41-8.4v-8.4c0-6-1.67-8.4-6.41-8.4Z"/>
+        <path d="M333.32,52.5h-10.87V15.6h10.87v36.9ZM327.86,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM327.86,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M337.22,15.6h24.53v7.8l-12.21,19.8h12.49v9.3h-25.08v-7.8l11.65-19.8h-11.37v-9.3Z"/>
+        <path d="M392.68,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM381.81,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M408.29,63.9h-10.87V15.6h10.87v48.3ZM402.83,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM402.83,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M424.17,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M175.3,119.64c-1.84,3.42-4.12,5.46-7.8,5.46-6.13,0-11.71-4.8-11.71-14.1v-9.9c0-9.3,5.57-14.1,11.43-14.1,2.73,0,4.74,1.14,6.69,3.06v-14.16h10.87v48.6h-9.48v-4.86ZM173.91,110.1v-8.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3v8.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3Z"/>
+        <path d="M200.66,124.5h-10.87v-36.9h10.87v36.9ZM195.2,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM195.2,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M222.68,119.46c-1.95,1.8-3.85,2.64-6.41,2.64-6.13,0-11.71-4.8-11.71-14.1v-6.9c0-9.3,5.57-14.1,11.71-14.1,3.68,0,5.96,2.16,7.8,5.52v-4.92h9.48v34.8c0,9.3-6.69,14.46-14.49,14.46-8.64,0-14.21-6.06-14.49-12.36h10.87c.28,1.5,1.12,3.6,3.62,3.6s3.62-1.5,3.62-6.6v-2.04ZM215.43,102v5.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3v-5.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3Z"/>
+        <path d="M249.43,124.5h-10.87v-36.9h10.87v36.9ZM243.97,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM243.97,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M251.66,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M300.43,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM281.76,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM289.57,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M316.04,124.5h-10.87v-48.6h10.87v48.6Z"/>
+        <path d="M331.93,101.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M381.53,87.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.29-22.26h10.48Z"/>
+        <path d="M409.68,110.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M424.18,101.7v22.8h-10.87v-48.6h10.87v14.82c1.89-2.4,4.29-3.72,6.97-3.72,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M250.55,173.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.12-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM239.68,183.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M264.76,164.52c1.73-3.36,4.12-5.52,7.8-5.52,6.13,0,11.71,4.8,11.71,14.1v9.9c0,9.36-5.57,14.1-11.43,14.1-2.84,0-4.74-1.02-6.69-3v13.8h-10.87v-48.3h9.48v4.92ZM266.16,174v8.1c0,3.78,1.11,6.3,3.62,6.3s3.62-2.1,3.62-6.3v-8.1c0-4.2-1.12-6.3-3.62-6.3s-3.62,2.58-3.62,6.3Z"/>
+        <path d="M299.04,196.5h-10.87v-48.6h10.87v48.6Z"/>
+        <path d="M314.93,196.5h-10.87v-36.9h10.87v36.9ZM309.46,147.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM309.46,154.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M330.76,176.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81v-48.6h10.81v28.2Z"/>
+        <path d="M378.75,173.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM360.08,154.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM367.88,183.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M411.08,182.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M425.57,196.5h-10.87v-36.9h10.87v36.9ZM420.11,147.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM420.11,154.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M430.03,154.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM441.46,196.5h-10.87v-36.9h10.87v36.9Z"/>
+      </g>
+      <g id="asset-name-DEX" data-bottom-y="135.9" data-lines="2">
+        <path d="M301.83,52.5h-15.61V7.5h15.61c10.03,0,16.72,6,16.72,16.8v11.4c0,10.8-6.69,16.8-16.72,16.8ZM300.71,17.4h-3.34v25.2h3.34c4.74,0,6.41-2.4,6.41-8.4v-8.4c0-6-1.67-8.4-6.41-8.4Z"/>
+        <path d="M333.32,52.5h-10.87V15.6h10.87v36.9ZM327.86,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM327.86,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M337.22,15.6h24.53v7.8l-12.21,19.8h12.49v9.3h-25.08v-7.8l11.65-19.8h-11.37v-9.3Z"/>
+        <path d="M392.68,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM381.81,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M408.29,63.9h-10.87V15.6h10.87v48.3ZM402.83,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM402.83,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M424.17,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M219.33,108.9v1.2c0,4.2,1.11,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM219.33,102v.9h7.25v-.9c0-4.2-1.12-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M258.46,105.6l10.48,18.9h-11.71l-4.52-9.6-4.68,9.6h-11.43l10.42-18.9-10.42-18h11.71l4.51,9.18,4.68-9.18h11.43l-10.48,18Z"/>
+        <path d="M267.83,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M299.32,108.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM299.32,102v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M340.01,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M354.22,124.5h-10.87v-36.9h10.87v36.9ZM348.76,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM348.76,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M368.99,108.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM367.6,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM368.99,102v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M409.68,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M430.58,110.58v-22.98h10.87v36.9h-9.48v-5.22c-2.12,3.78-5.07,5.82-8.36,5.82-6.69,0-10.59-4.8-10.59-13.2v-24.3h10.87v23.4c0,2.88,1.23,4.5,3.07,4.5,2.06,0,3.62-1.62,3.62-4.92Z"/>
+      </g>
+      <g id="asset-name-DIM" data-bottom-y="135.9" data-lines="2">
+        <path d="M51.28,52.5h-15.61V7.5h15.61c10.03,0,16.72,6,16.72,16.8v11.4c0,10.8-6.69,16.8-16.72,16.8ZM50.17,17.4h-3.34v25.2h3.34c4.74,0,6.41-2.4,6.41-8.4v-8.4c0-6-1.67-8.4-6.41-8.4Z"/>
+        <path d="M82.77,52.5h-10.87V15.6h10.87v36.9ZM77.31,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM77.31,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M104.79,47.46c-1.95,1.8-3.85,2.64-6.41,2.64-6.13,0-11.71-4.8-11.71-14.1v-6.9c0-9.3,5.57-14.1,11.71-14.1,3.68,0,5.96,2.16,7.8,5.52v-4.92h9.48v34.8c0,9.3-6.69,14.46-14.49,14.46-8.64,0-14.21-6.06-14.49-12.36h10.87c.28,1.5,1.11,3.6,3.62,3.6s3.62-1.5,3.62-6.6v-2.04ZM97.54,30v5.1c0,4.2,1.11,6.3,3.62,6.3s3.62-2.52,3.62-6.3v-5.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3Z"/>
+        <path d="M131.54,52.5h-10.87V15.6h10.87v36.9ZM126.08,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM126.08,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M133.77,15.6h4.46V7.5h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M182.55,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM163.87,10.44l11.71-7.74,1.51,2.64-11.87,7.44-1.34-2.34ZM171.68,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M198.15,52.5h-10.87V3.9h10.87v48.6Z"/>
+        <path d="M214.04,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M263.37,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM252.5,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M308.79,52.5h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,5.02-5.82,8.47-5.82,4.57,0,7.41,2.4,9.03,5.88,2.12-3.54,5.24-5.88,8.53-5.88,6.86,0,10.48,5.4,10.48,13.8v23.7h-10.87v-22.8c0-3.3-1.12-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8Z"/>
+        <path d="M358.12,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM347.25,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M373.73,52.5h-10.87V3.9h10.87v48.6ZM376.68,2.1h2.62l-.84,12h-2.34l.56-12Z"/>
+        <path d="M391.29,52.5h-9.48V3.9h10.87v14.16c1.95-1.92,3.96-3.06,6.69-3.06,5.85,0,11.43,4.8,11.43,14.1v9.9c0,9.3-5.57,14.1-11.71,14.1-3.68,0-5.96-2.04-7.8-5.46v4.86ZM399.93,38.1v-8.1c0-4.2-1.12-6.3-3.62-6.3s-3.62,2.58-3.62,6.3v8.1c0,3.78,1.11,6.3,3.62,6.3s3.62-2.1,3.62-6.3Z"/>
+        <path d="M441.73,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM430.86,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M105.9,104.58h27.31v2.82h-27.31v-2.82Z"/>
+        <path d="M159.08,104.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81v-48.6h10.81v28.2Z"/>
+        <path d="M207.63,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM196.76,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M222.4,101.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.12-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M272.29,110.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M285.66,108.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM285.66,102v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M317.16,92.52c1.73-3.36,4.12-5.52,7.8-5.52,6.13,0,11.71,4.8,11.71,14.1v9.9c0,9.36-5.57,14.1-11.43,14.1-2.84,0-4.74-1.02-6.69-3v13.8h-10.87v-48.3h9.48v4.92ZM318.55,102v8.1c0,3.78,1.11,6.3,3.62,6.3s3.62-2.1,3.62-6.3v-8.1c0-4.2-1.12-6.3-3.62-6.3s-3.62,2.58-3.62,6.3Z"/>
+        <path d="M337.5,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M399.65,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM388.78,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M423.06,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M424.17,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+      </g>
+      <g id="asset-name-FOD" data-bottom-y="135.9" data-lines="2">
+        <path d="M121.23,52.5V7.5h26.2v9.9h-15.05v7.8h13.38v9.9h-13.38v17.4h-11.15Z"/>
+        <path d="M178.08,39c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM167.22,38.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M178.92,15.6h4.46V7.5h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M228.53,39c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM217.66,38.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.11,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M249.43,47.46c-1.95,1.8-3.85,2.64-6.41,2.64-6.13,0-11.71-4.8-11.71-14.1v-6.9c0-9.3,5.57-14.1,11.71-14.1,3.68,0,5.96,2.16,7.8,5.52v-4.92h9.48v34.8c0,9.3-6.69,14.46-14.49,14.46-8.64,0-14.21-6.06-14.49-12.36h10.87c.28,1.5,1.11,3.6,3.62,3.6s3.62-1.5,3.62-6.6v-2.04ZM242.19,30v5.1c0,4.2,1.11,6.3,3.62,6.3s3.62-2.52,3.62-6.3v-5.1c0-3.72-1.12-6.3-3.62-6.3s-3.62,2.1-3.62,6.3Z"/>
+        <path d="M283.99,15.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87V15.6h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M313.53,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM302.66,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M315.48,15.6h4.18c0-7.56,6.02-11.7,12.82-11.7h2.51v8.1h-1.39c-2.79,0-3.07,2.1-3.07,3.6h4.46v8.7h-4.46v28.2h-10.87v-28.2h-4.18v-8.7ZM348.09,52.5h-10.87V15.6h10.87v36.9ZM342.63,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM342.63,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M380.7,38.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M395.13,32.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81V3.9h10.81v28.2Z"/>
+        <path d="M445.08,15.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.29-22.26h10.48ZM425.57,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34Z"/>
+        <path d="M307.96,119.64c-1.84,3.42-4.12,5.46-7.8,5.46-6.13,0-11.71-4.8-11.71-14.1v-9.9c0-9.3,5.57-14.1,11.43-14.1,2.73,0,4.74,1.14,6.69,3.06v-14.16h10.87v48.6h-9.48v-4.86ZM306.57,110.1v-8.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3v8.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3Z"/>
+        <path d="M333.32,124.5h-10.87v-36.9h10.87v36.9ZM327.86,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM327.86,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M337.22,87.6h24.53v7.8l-12.21,19.8h12.49v9.3h-25.08v-7.8l11.65-19.8h-11.37v-9.3Z"/>
+        <path d="M392.68,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM381.81,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M408.29,135.9h-10.87v-48.3h10.87v48.3ZM402.83,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM402.83,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M424.17,101.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+      </g>
+      <g id="asset-name-GDI" data-bottom-y="135.9" data-lines="2">
+        <path d="M244.69,27.6h16.72v9c0,9.3-6.69,17.16-16.72,17.16s-16.72-7.26-16.72-17.16v-13.2c0-9.9,6.69-17.16,16.72-17.16s16.72,7.26,16.72,16.56h-11.43c-.28-3.72-1.67-6.3-5.3-6.3s-5.29,2.7-5.29,8.4v10.2c0,5.7,1.95,8.4,5.57,8.4,3.23,0,5.46-2.1,5.57-6.3h-5.85v-9.6Z"/>
+        <path d="M283.99,15.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87V15.6h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M313.53,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM302.66,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M315.48,15.6h4.18c0-7.56,6.02-11.7,12.82-11.7h2.51v8.1h-1.39c-2.79,0-3.07,2.1-3.07,3.6h4.46v8.7h-4.46v28.2h-10.87v-28.2h-4.18v-8.7ZM348.09,52.5h-10.87V15.6h10.87v36.9ZM342.63,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM342.63,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M380.7,38.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M395.13,32.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81V3.9h10.81v28.2Z"/>
+        <path d="M445.08,15.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.29-22.26h10.48ZM425.57,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34Z"/>
+        <path d="M307.96,119.64c-1.84,3.42-4.12,5.46-7.8,5.46-6.13,0-11.71-4.8-11.71-14.1v-9.9c0-9.3,5.57-14.1,11.43-14.1,2.73,0,4.74,1.14,6.69,3.06v-14.16h10.87v48.6h-9.48v-4.86ZM306.57,110.1v-8.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3v8.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3Z"/>
+        <path d="M333.32,124.5h-10.87v-36.9h10.87v36.9ZM327.86,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM327.86,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M337.22,87.6h24.53v7.8l-12.21,19.8h12.49v9.3h-25.08v-7.8l11.65-19.8h-11.37v-9.3Z"/>
+        <path d="M392.68,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM381.81,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M408.29,135.9h-10.87v-48.3h10.87v48.3ZM402.83,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM402.83,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M424.17,101.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+      </g>
+      <g id="asset-name-GPD" data-bottom-y="207.9" data-lines="3">
+        <path d="M244.69,27.6h16.72v9c0,9.3-6.69,17.16-16.72,17.16s-16.72-7.26-16.72-17.16v-13.2c0-9.9,6.69-17.16,16.72-17.16s16.72,7.26,16.72,16.56h-11.43c-.28-3.72-1.67-6.3-5.3-6.3s-5.29,2.7-5.29,8.4v10.2c0,5.7,1.95,8.4,5.57,8.4,3.23,0,5.46-2.1,5.57-6.3h-5.85v-9.6Z"/>
+        <path d="M283.99,15.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87V15.6h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M313.53,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM302.66,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M315.48,15.6h4.18c0-7.56,6.02-11.7,12.82-11.7h2.51v8.1h-1.39c-2.79,0-3.07,2.1-3.07,3.6h4.46v8.7h-4.46v28.2h-10.87v-28.2h-4.18v-8.7ZM348.09,52.5h-10.87V15.6h10.87v36.9ZM342.63,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM342.63,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M380.7,38.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M395.13,32.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81V3.9h10.81v28.2Z"/>
+        <path d="M445.08,15.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.29-22.26h10.48ZM425.57,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34Z"/>
+        <path d="M136.28,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM125.41,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M162.76,92.52c1.73-3.36,4.12-5.52,7.8-5.52,6.13,0,11.71,4.8,11.71,14.1v9.9c0,9.36-5.57,14.1-11.43,14.1-2.84,0-4.74-1.02-6.69-3v13.8h-10.87v-48.3h9.48v4.92ZM164.15,102v8.1c0,3.78,1.12,6.3,3.62,6.3s3.62-2.1,3.62-6.3v-8.1c0-4.2-1.11-6.3-3.62-6.3s-3.62,2.58-3.62,6.3Z"/>
+        <path d="M204.84,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M219.05,124.5h-10.87v-36.9h10.87v36.9ZM213.59,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM213.59,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M233.82,108.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM233.82,102v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M267.83,125.46c-7.52,0-13.93-4.86-13.93-13.56h10.03c0,3,1.62,4.8,4.01,4.8,2.06,0,3.23-1.14,3.23-2.7,0-5.22-16.33-3.12-16.33-15.9,0-6.42,5.57-11.46,12.82-11.46,8.81,0,13.27,6.06,13.27,13.56h-10.03c0-2.94-1.34-4.8-3.46-4.8-1.67,0-2.84,1.2-2.84,2.7,0,6,16.61,3.78,16.61,15.6,0,6.6-5.29,11.76-13.38,11.76Z"/>
+        <path d="M281.48,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M331.09,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM320.22,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M353.66,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M384.32,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM373.45,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M415.54,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M445.08,87.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.29-22.26h10.48ZM425.57,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34Z"/>
+        <path d="M307.96,191.64c-1.84,3.42-4.12,5.46-7.8,5.46-6.13,0-11.71-4.8-11.71-14.1v-9.9c0-9.3,5.57-14.1,11.43-14.1,2.73,0,4.74,1.14,6.69,3.06v-14.16h10.87v48.6h-9.48v-4.86ZM306.57,182.1v-8.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3v8.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3Z"/>
+        <path d="M333.32,196.5h-10.87v-36.9h10.87v36.9ZM327.86,147.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM327.86,154.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M337.22,159.6h24.53v7.8l-12.21,19.8h12.49v9.3h-25.08v-7.8l11.65-19.8h-11.37v-9.3Z"/>
+        <path d="M392.68,173.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM381.81,183.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M408.29,207.9h-10.87v-48.3h10.87v48.3ZM402.83,147.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM402.83,154.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M424.17,173.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+      </g>
+      <g id="asset-name-KRM" data-bottom-y="197.46" data-lines="3">
+        <path d="M46.76,52.5l-11.65-20.34v20.34h-11.15V7.5h11.15v19.62l10.59-19.62h11.26l-11.43,20.04,14.38,24.96h-13.15Z"/>
+        <path d="M86.67,39c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM75.8,38.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M101.44,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M122.62,15.6h24.53v7.8l-12.21,19.8h12.49v9.3h-25.08v-7.8l11.65-19.8h-11.37v-9.3Z"/>
+        <path d="M160.25,36.9v1.2c0,4.2,1.11,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM160.25,30v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M200.94,15.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87V15.6h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M232.99,15.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.3-22.2h10.48Z"/>
+        <path d="M260.3,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM241.63,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM249.43,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M262.25,15.6h4.46V7.5h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M311.86,39c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM300.99,38.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M334.43,15.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87V15.6h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M349.48,53.46c-7.52,0-13.93-4.86-13.93-13.56h10.03c0,3,1.62,4.8,4.01,4.8,2.06,0,3.23-1.14,3.23-2.7,0-5.22-16.33-3.12-16.33-15.9,0-6.42,5.57-11.46,12.82-11.46,8.81,0,13.27,6.06,13.27,13.56h-10.03c0-2.94-1.34-4.8-3.46-4.8-1.67,0-2.84,1.2-2.84,2.7,0,6,16.61,3.78,16.61,15.6,0,6.6-5.29,11.76-13.38,11.76Z"/>
+        <path d="M363.14,15.6h4.46V7.5h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M414.14,15.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M442.57,39c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM431.7,38.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M29.54,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6H1.39c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM18.67,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M65.21,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M77.76,108.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM77.76,102v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M111.76,125.46c-7.52,0-13.94-4.86-13.94-13.56h10.03c0,3,1.62,4.8,4.01,4.8,2.06,0,3.23-1.14,3.23-2.7,0-5.22-16.33-3.12-16.33-15.9,0-6.42,5.57-11.46,12.82-11.46,8.81,0,13.27,6.06,13.27,13.56h-10.03c0-2.94-1.34-4.8-3.46-4.8-1.67,0-2.84,1.2-2.84,2.7,0,6,16.61,3.78,16.61,15.6,0,6.6-5.3,11.76-13.38,11.76ZM118.78,74.82l1.56,2.22-8.86,7.26-8.86-7.26,1.5-2.22,7.36,6,7.3-6Z"/>
+        <path d="M125.41,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M174.19,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM163.32,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M196.2,110.58v-22.98h10.87v36.9h-9.48v-5.22c-2.12,3.78-5.07,5.82-8.36,5.82-6.69,0-10.59-4.8-10.59-13.2v-24.3h10.87v23.4c0,2.88,1.23,4.5,3.07,4.5,2.06,0,3.62-1.62,3.62-4.92Z"/>
+        <path d="M230.76,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M260.3,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.12-3.48-3.07-3.48-2.67,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM241.63,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM249.43,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M262.25,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M311.86,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM300.99,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M334.44,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M349.48,125.46c-7.52,0-13.93-4.86-13.93-13.56h10.03c0,3,1.62,4.8,4.01,4.8,2.06,0,3.23-1.14,3.23-2.7,0-5.22-16.33-3.12-16.33-15.9,0-6.42,5.57-11.46,12.82-11.46,8.81,0,13.27,6.06,13.27,13.56h-10.03c0-2.94-1.34-4.8-3.46-4.8-1.67,0-2.84,1.2-2.84,2.7,0,6,16.61,3.78,16.61,15.6,0,6.6-5.29,11.76-13.38,11.76Z"/>
+        <path d="M363.14,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M414.14,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M442.57,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM431.7,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M144.64,176.58h27.31v2.82h-27.31v-2.82Z"/>
+        <path d="M215.43,196.5h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,5.02-5.82,8.47-5.82,4.57,0,7.41,2.4,9.03,5.88,2.12-3.54,5.24-5.88,8.53-5.88,6.86,0,10.48,5.4,10.48,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8Z"/>
+        <path d="M264.76,173.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM253.89,183.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M280.37,196.5h-10.87v-48.6h10.87v48.6Z"/>
+        <path d="M296.25,196.5h-10.87v-36.9h10.87v36.9ZM290.79,147.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM290.79,154.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M328.3,173.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM317.43,183.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M351.71,159.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M366.76,197.46c-7.52,0-13.93-4.86-13.93-13.56h10.03c0,3,1.62,4.8,4.01,4.8,2.06,0,3.23-1.14,3.23-2.7,0-5.22-16.33-3.12-16.33-15.9,0-6.42,5.57-11.46,12.82-11.46,8.81,0,13.27,6.06,13.27,13.56h-10.03c0-2.94-1.34-4.8-3.46-4.8-1.67,0-2.84,1.2-2.84,2.7,0,6,16.61,3.78,16.61,15.6,0,6.6-5.29,11.76-13.38,11.76Z"/>
+        <path d="M394.02,176.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81v-48.6h10.81v28.2Z"/>
+        <path d="M424.45,180.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM424.45,174v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M217.38,231.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M248.88,252.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM248.88,246v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M298.48,254.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M312.98,245.7v22.8h-10.87v-48.6h10.87v14.82c1.89-2.4,4.29-3.72,6.97-3.72,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M346.14,245.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M379.3,268.5h-10.87v-36.9h10.87v36.9ZM373.84,219.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM373.84,226.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M395.13,248.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81v-48.6h10.81v28.2Z"/>
+        <path d="M445.08,231.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.29-22.26h10.48Z"/>
+      </g>
+      <g id="asset-name-ODE" data-bottom-y="135.9" data-lines="2">
+        <path d="M287.33,23.4v13.2c0,9.9-6.69,17.16-16.72,17.16s-16.72-7.26-16.72-17.16v-13.2c0-9.9,6.69-17.16,16.72-17.16s16.72,7.26,16.72,17.16ZM275.91,24.9c0-5.7-1.67-8.4-5.3-8.4s-5.29,2.7-5.29,8.4v10.2c0,5.7,1.67,8.4,5.29,8.4s5.3-2.7,5.3-8.4v-10.2Z"/>
+        <path d="M309.63,47.64c-1.84,3.42-4.12,5.46-7.8,5.46-6.13,0-11.71-4.8-11.71-14.1v-9.9c0-9.3,5.57-14.1,11.43-14.1,2.73,0,4.74,1.14,6.69,3.06V3.9h10.87v48.6h-9.48v-4.86ZM308.24,38.1v-8.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3v8.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3Z"/>
+        <path d="M333.88,36.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM333.88,30v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M383.21,15.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M395.47,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M445.08,15.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.29-22.26h10.48ZM425.57,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34Z"/>
+        <path d="M307.96,119.64c-1.84,3.42-4.12,5.46-7.8,5.46-6.13,0-11.71-4.8-11.71-14.1v-9.9c0-9.3,5.57-14.1,11.43-14.1,2.73,0,4.74,1.14,6.69,3.06v-14.16h10.87v48.6h-9.48v-4.86ZM306.57,110.1v-8.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3v8.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3Z"/>
+        <path d="M333.32,124.5h-10.87v-36.9h10.87v36.9ZM327.86,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM327.86,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M337.22,87.6h24.53v7.8l-12.21,19.8h12.49v9.3h-25.08v-7.8l11.65-19.8h-11.37v-9.3Z"/>
+        <path d="M392.68,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM381.81,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M408.29,135.9h-10.87v-48.3h10.87v48.3ZM402.83,75.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM402.83,82.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M424.17,101.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+      </g>
+      <g id="asset-name-PRV" data-bottom-y="135.9" data-lines="2">
+        <path d="M144.64,52.5h-11.15V7.5h17.28c8.31,0,14.49,5.88,14.49,13.8v1.8c0,9.3-6.97,15.6-14.77,15.6h-5.85v13.8ZM144.64,28.8h3.07c3.46,0,6.13-1.92,6.13-5.7s-1.84-5.7-5.57-5.7h-3.62v11.4Z"/>
+        <path d="M186.45,15.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87V15.6h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M217.1,39c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM206.23,38.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M230.48,20.52c1.73-3.36,4.12-5.52,7.8-5.52,6.13,0,11.71,4.8,11.71,14.1v9.9c0,9.36-5.57,14.1-11.43,14.1-2.84,0-4.74-1.02-6.69-3v13.8h-10.87V15.6h9.48v4.92ZM231.87,30v8.1c0,3.78,1.11,6.3,3.62,6.3s3.62-2.1,3.62-6.3v-8.1c0-4.2-1.12-6.3-3.62-6.3s-3.62,2.58-3.62,6.3Z"/>
+        <path d="M280.92,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM270.06,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M302.66,47.46c-1.95,1.8-3.85,2.64-6.41,2.64-6.13,0-11.71-4.8-11.71-14.1v-6.9c0-9.3,5.57-14.1,11.71-14.1,3.68,0,5.96,2.16,7.8,5.52v-4.92h9.48v34.8c0,9.3-6.69,14.46-14.49,14.46-8.64,0-14.21-6.06-14.49-12.36h10.87c.28,1.5,1.12,3.6,3.62,3.6s3.62-1.5,3.62-6.6v-2.04ZM295.42,30v5.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3v-5.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3Z"/>
+        <path d="M345.58,29.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM334.71,39.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M377.91,38.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59ZM370.72,2.82l1.56,2.22-8.86,7.26-8.86-7.26,1.51-2.22,7.36,6,7.3-6Z"/>
+        <path d="M392.4,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M424.45,36.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM423.06,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM424.45,30v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M152.17,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.3-22.2h10.48Z"/>
+        <path d="M181.71,87.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.3-22.26h10.48ZM162.2,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34Z"/>
+        <path d="M180.87,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M231.87,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.3-22.2h10.48Z"/>
+        <path d="M259.19,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.12-3.48-3.07-3.48-2.67,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM248.32,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M282.6,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M296.81,101.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M318.55,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM329.98,124.5h-10.87v-36.9h10.87v36.9Z"/>
+        <path d="M362.58,110.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M363.14,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M414.14,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M442.57,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM431.7,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+      </g>
+      <g id="asset-name-SCE" data-bottom-y="340.5" data-lines="5">
+        <path d="M220.45,6.24c9.75,0,15.61,6.36,15.61,15.66h-11.43c0-3-1.5-5.4-4.29-5.4s-4.07,1.68-4.07,3.6c0,6.9,20.34,3.78,20.34,19.5,0,9-7.25,14.16-15.61,14.16-9.48,0-16.72-4.86-16.72-15.66h11.43c0,3.48,2.06,5.4,5.3,5.4,2.79,0,4.46-1.62,4.46-3.9,0-6.6-20.35-2.82-20.35-19.5,0-8.1,6.52-13.86,15.33-13.86Z"/>
+        <path d="M267.55,38.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M280.92,36.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM279.53,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM280.92,30v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M313.81,29.7v22.8h-10.87V15.6h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M346.98,52.5h-10.87V15.6h10.87v36.9ZM341.51,3.6c2.34,0,4.18,1.98,4.18,4.5s-1.84,4.5-4.18,4.5-4.18-1.98-4.18-4.5,1.84-4.5,4.18-4.5ZM341.51,10.38c1.23,0,2.12-1.08,2.12-2.28s-1-2.22-2.12-2.22-2.06,1.02-2.06,2.22.95,2.28,2.06,2.28Z"/>
+        <path d="M379.58,38.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M394.02,32.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81V3.9h10.81v28.2Z"/>
+        <path d="M424.45,36.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM423.06,10.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM424.45,30v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M152.17,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.3-22.2h10.48Z"/>
+        <path d="M181.71,87.6l-10.48,36.9v11.4h-10.87v-11.4l-10.42-36.9h10.7l5.3,22.26,5.3-22.26h10.48ZM162.2,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34Z"/>
+        <path d="M180.87,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M231.87,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.3-22.2h10.48Z"/>
+        <path d="M259.19,101.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.12-3.48-3.07-3.48-2.67,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM248.32,111.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M282.6,87.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M296.81,101.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M318.55,82.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM329.98,124.5h-10.87v-36.9h10.87v36.9Z"/>
+        <path d="M362.58,110.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59Z"/>
+        <path d="M363.14,87.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M414.14,87.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M442.57,111c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM431.7,110.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M238,176.58h27.31v2.82h-27.31v-2.82Z"/>
+        <path d="M308.79,196.5h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,5.02-5.82,8.47-5.82,4.57,0,7.41,2.4,9.03,5.88,2.12-3.54,5.24-5.88,8.53-5.88,6.86,0,10.48,5.4,10.48,13.8v23.7h-10.87v-22.8c0-3.3-1.12-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1v22.8Z"/>
+        <path d="M358.12,173.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM347.25,183.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M373.73,196.5h-10.87v-48.6h10.87v48.6ZM376.68,146.1h2.62l-.84,12h-2.34l.56-12Z"/>
+        <path d="M391.29,196.5h-9.48v-48.6h10.87v14.16c1.95-1.92,3.96-3.06,6.69-3.06,5.85,0,11.43,4.8,11.43,14.1v9.9c0,9.3-5.57,14.1-11.71,14.1-3.68,0-5.96-2.04-7.8-5.46v4.86ZM399.93,182.1v-8.1c0-4.2-1.12-6.3-3.62-6.3s-3.62,2.58-3.62,6.3v8.1c0,3.78,1.11,6.3,3.62,6.3s3.62-2.1,3.62-6.3Z"/>
+        <path d="M441.73,173.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM430.86,183.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M152.45,245.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.94,6.06,13.94,14.46ZM141.58,255.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M187.84,263.64c-1.84,3.42-4.12,5.46-7.8,5.46-6.13,0-11.71-4.8-11.71-14.1v-9.9c0-9.3,5.57-14.1,11.43-14.1,2.73,0,4.74,1.14,6.69,3.06v-14.16h10.87v48.6h-9.48v-4.86ZM186.45,254.1v-8.1c0-3.72-1.11-6.3-3.62-6.3s-3.62,2.1-3.62,6.3v8.1c0,4.2,1.12,6.3,3.62,6.3s3.62-2.52,3.62-6.3Z"/>
+        <path d="M212.09,252.9v1.2c0,4.2,1.12,6.6,3.62,6.6,2.23,0,3.07-1.8,3.34-3.6h10.87c-.28,6.18-5.57,12.36-14.21,12.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v7.8h-18.12ZM212.09,246v.9h7.25v-.9c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6Z"/>
+        <path d="M244.92,248.1l9.36-16.5h11.04l-10.7,17.22,11.54,19.68h-12.04l-9.2-15.6v15.6h-10.81v-48.6h10.81v28.2Z"/>
+        <path d="M293.47,255c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM282.6,254.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M316.04,231.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M345.58,245.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM334.71,255.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M377.91,254.1c0,10.2-5.57,15.36-14.21,15.36-7.8,0-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46,8.64,0,14.21,5.16,14.21,15.36h-10.59c0-4.5-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.1,3.62-6.6h10.59ZM370.72,218.82l1.56,2.22-8.86,7.26-8.86-7.26,1.51-2.22,7.36,6,7.3-6Z"/>
+        <path d="M392.4,245.7v22.8h-10.87v-36.9h9.48v5.22c2.01-3.72,4.96-5.82,8.36-5.82,6.97,0,10.59,5.4,10.59,13.8v23.7h-10.87v-22.8c0-3.3-1.11-5.1-3.07-5.1-2.23,0-3.62,1.8-3.62,5.1Z"/>
+        <path d="M441.73,245.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM423.06,226.44l11.71-7.74,1.5,2.64-11.87,7.44-1.34-2.34ZM430.86,255.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+        <path d="M276.47,303.6h4.46v-8.1h10.59v8.1h5.02v8.7h-5.02v28.2h-10.87v-28.2h-4.18v-8.7Z"/>
+        <path d="M327.47,303.6l-10.48,36.9h-10.87l-10.42-36.9h10.7l5.3,22.2,5.29-22.2h10.48Z"/>
+        <path d="M355.89,327c0,9.3-6.69,14.46-14.49,14.46s-14.49-5.16-14.49-14.46v-9.9c0-9.3,6.69-14.46,14.49-14.46s14.49,5.16,14.49,14.46v9.9ZM345.02,326.1v-8.1c0-4.2-1.11-6.6-3.62-6.6s-3.62,2.4-3.62,6.6v8.1c0,4.2,1.12,6.6,3.62,6.6s3.62-2.4,3.62-6.6Z"/>
+        <path d="M378.47,303.3v11.4h-1.39c-2.79,0-6.41.48-6.41,3.9v21.9h-10.87v-36.9h9.48v5.94c1.62-3.9,4.29-6.24,7.25-6.24h1.95Z"/>
+        <path d="M391.29,340.5h-9.48v-48.6h10.87v14.16c1.95-1.92,3.96-3.06,6.69-3.06,5.85,0,11.43,4.8,11.43,14.1v9.9c0,9.3-5.57,14.1-11.71,14.1-3.68,0-5.96-2.04-7.8-5.46v4.86ZM399.93,326.1v-8.1c0-4.2-1.12-6.3-3.62-6.3s-3.62,2.58-3.62,6.3v8.1c0,3.78,1.11,6.3,3.62,6.3s3.62-2.1,3.62-6.3Z"/>
+        <path d="M441.73,317.1v23.4h-9.48v-5.22c-1.62,3.6-5.24,5.82-8.64,5.82-6.02,0-10.59-3.72-10.59-10.2,0-11.82,17.84-9.42,17.84-16.02,0-1.86-1.11-3.48-3.07-3.48-2.68,0-3.34,2.4-3.34,6h-10.87c0-9,5.57-14.76,14.21-14.76s13.93,6.06,13.93,14.46ZM430.86,327.3v-3.9c-3.51,3.06-6.97,2.82-6.97,6.3,0,1.68,1.23,3,2.79,3,2.12,0,4.18-1.8,4.18-5.4Z"/>
+      </g>
+
+      <!-- CIFERNÍK A RUČIČKY HODÍN PRAGOTRON -->
+      <g id="asset-pragotron-dial">
+        <g class="pragotron-dial-marks">
+        <rect x="233.15" y="11.57" width="26.32" height="5.5" transform="translate(206.32 257.78) rotate(-84)" fill="#1c68a6"/>
+        <rect x="254.97" y="15.02" width="26.32" height="5.5" transform="translate(195 276.35) rotate(-78)" fill="#1c68a6"/>
+        <rect x="276.31" y="20.74" width="26.32" height="5.5" transform="translate(177.68 291.54) rotate(-72)" fill="#1c68a6"/>
+        <rect x="296.94" y="28.66" width="26.32" height="5.5" transform="translate(155.28 301.92) rotate(-66)" fill="#1c68a6"/>
+        <rect x="335.15" y="50.72" width="26.32" height="5.5" transform="translate(100.32 303.84) rotate(-54)" fill="#1c68a6"/>
+        <rect x="352.32" y="64.63" width="26.32" height="5.5" transform="translate(70.86 293.9) rotate(-48)" fill="#1c68a6"/>
+        <rect x="367.95" y="80.25" width="26.32" height="5.5" transform="translate(42.35 276.33) rotate(-42)" fill="#1c68a6"/>
+        <rect x="381.85" y="97.42" width="26.32" height="5.5" transform="translate(16.56 251.31) rotate(-36)" fill="#1c68a6"/>
+        <rect x="403.92" y="135.64" width="26.32" height="5.5" transform="translate(-20.23 181.6) rotate(-24)" fill="#1c68a6"/>
+        <rect x="411.83" y="156.26" width="26.32" height="5.5" transform="translate(-28.34 139.11) rotate(-18)" fill="#1c68a6"/>
+        <rect x="417.55" y="177.61" width="26.32" height="5.5" transform="translate(-28.09 93.49) rotate(-12)" fill="#1c68a6"/>
+        <rect x="421.01" y="199.43" width="26.32" height="5.5" transform="translate(-18.76 46.49) rotate(-6)" fill="#1c68a6"/>
+        <rect x="431.42" y="233.15" width="5.5" height="26.32" transform="translate(143.83 652.35) rotate(-84)" fill="#1c68a6"/>
+        <rect x="427.96" y="254.97" width="5.5" height="26.32" transform="translate(78.89 633.68) rotate(-78)" fill="#1c68a6"/>
+        <rect x="422.24" y="276.31" width="5.5" height="26.32" transform="translate(18.36 604.21) rotate(-72)" fill="#1c68a6"/>
+        <rect x="414.33" y="296.94" width="5.5" height="26.32" transform="translate(-35.85 564.99) rotate(-66)" fill="#1c68a6"/>
+        <rect x="392.26" y="335.15" width="5.5" height="26.32" transform="translate(-118.96 463.15) rotate(-54)" fill="#1c68a6"/>
+        <rect x="378.36" y="352.32" width="5.5" height="26.32" transform="translate(-145.51 404.15) rotate(-48)" fill="#1c68a6"/>
+        <rect x="362.73" y="367.95" width="5.5" height="26.32" transform="translate(-161.13 342.45) rotate(-42)" fill="#1c68a6"/>
+        <rect x="345.56" y="381.85" width="5.5" height="26.32" transform="translate(-165.66 280.17) rotate(-36)" fill="#1c68a6"/>
+        <rect x="307.35" y="403.92" width="5.5" height="26.32" transform="translate(-142.83 162.19) rotate(-24)" fill="#1c68a6"/>
+        <rect x="286.72" y="411.83" width="5.5" height="26.32" transform="translate(-117.16 110.25) rotate(-18)" fill="#1c68a6"/>
+        <rect x="265.38" y="417.55" width="5.5" height="26.32" transform="translate(-83.69 65.16) rotate(-12)" fill="#1c68a6"/>
+        <rect x="243.56" y="421.01" width="5.5" height="26.32" transform="translate(-44.03 28.12) rotate(-6)" fill="#1c68a6"/>
+        <rect x="189.02" y="431.42" width="26.32" height="5.5" transform="translate(-250.75 589.86) rotate(-84)" fill="#1c68a6"/>
+        <rect x="167.2" y="427.96" width="26.32" height="5.5" transform="translate(-278.44 517.58) rotate(-78)" fill="#1c68a6"/>
+        <rect x="145.85" y="422.24" width="26.32" height="5.5" transform="translate(-294.32 444.9) rotate(-72)" fill="#1c68a6"/>
+        <rect x="125.23" y="414.33" width="26.32" height="5.5" transform="translate(-298.92 373.86) rotate(-66)" fill="#1c68a6"/>
+        <rect x="87.01" y="392.26" width="26.32" height="5.5" transform="translate(-278.28 243.87) rotate(-54)" fill="#1c68a6"/>
+        <rect x="69.84" y="378.36" width="26.32" height="5.5" transform="translate(-255.76 187.78) rotate(-48)" fill="#1c68a6"/>
+        <rect x="54.22" y="362.73" width="26.32" height="5.5" transform="translate(-227.25 138.96) rotate(-42)" fill="#1c68a6"/>
+        <rect x="40.31" y="345.56" width="26.32" height="5.5" transform="translate(-194.52 97.95) rotate(-36)" fill="#1c68a6"/>
+        <rect x="18.25" y="307.35" width="26.32" height="5.5" transform="translate(-123.41 39.59) rotate(-24)" fill="#1c68a6"/>
+        <rect x="10.33" y="286.72" width="26.32" height="5.5" transform="translate(-88.3 21.43) rotate(-18)" fill="#1c68a6"/>
+        <rect x="4.61" y="265.38" width="26.32" height="5.5" transform="translate(-55.36 9.55) rotate(-12)" fill="#1c68a6"/>
+        <rect x="1.16" y="243.56" width="26.32" height="5.5" transform="translate(-25.67 2.85) rotate(-6)" fill="#1c68a6"/>
+        <rect x="11.57" y="189.02" width="5.5" height="26.32" transform="translate(-188.25 195.28) rotate(-84)" fill="#1c68a6"/>
+        <rect x="15.02" y="167.2" width="5.5" height="26.32" transform="translate(-162.34 160.24) rotate(-78)" fill="#1c68a6"/>
+        <rect x="20.74" y="145.85" width="5.5" height="26.32" transform="translate(-135 132.22) rotate(-72)" fill="#1c68a6"/>
+        <rect x="28.66" y="125.23" width="5.5" height="26.32" transform="translate(-107.79 110.8) rotate(-66)" fill="#1c68a6"/>
+        <rect x="50.72" y="87.01" width="5.5" height="26.32" transform="translate(-59 84.55) rotate(-54)" fill="#1c68a6"/>
+        <rect x="64.63" y="69.84" width="5.5" height="26.32" transform="translate(-39.39 77.53) rotate(-48)" fill="#1c68a6"/>
+        <rect x="80.25" y="54.22" width="5.5" height="26.32" transform="translate(-23.77 72.85) rotate(-42)" fill="#1c68a6"/>
+        <rect x="97.42" y="40.31" width="5.5" height="26.32" transform="translate(-12.3 69.09) rotate(-36)" fill="#1c68a6"/>
+        <rect x="135.64" y="18.25" width="5.5" height="26.32" transform="translate(-.81 59) rotate(-24)" fill="#1c68a6"/>
+        <rect x="156.26" y="10.33" width="5.5" height="26.32" transform="translate(.52 50.29) rotate(-18)" fill="#1c68a6"/>
+        <rect x="177.61" y="4.61" width="5.5" height="26.32" transform="translate(.25 37.89) rotate(-12)" fill="#1c68a6"/>
+        <rect x="199.43" y="1.16" width="5.5" height="26.32" transform="translate(-.39 21.21) rotate(-6)" fill="#1c68a6"/>
+        <rect x="288.7" y="49.38" width="63.56" height="16.37" transform="translate(110.39 306.32) rotate(-60)" fill="#1c68a6"/>
+        <rect x="359.14" y="119.83" width="63.56" height="16.37" transform="translate(-11.63 212.61) rotate(-30)" fill="#1c68a6"/>
+        <rect x="384.93" y="216.06" width="63.56" height="16.37" fill="#1c68a6"/>
+        <rect x="382.74" y="288.7" width="16.37" height="63.56" transform="translate(-82.08 498.79) rotate(-60)" fill="#1c68a6"/>
+        <rect x="312.29" y="359.14" width="16.37" height="63.56" transform="translate(-152.53 212.61) rotate(-30)" fill="#1c68a6"/>
+        <rect x="216.06" y="384.93" width="16.37" height="63.56" fill="#1c68a6"/>
+        <rect x="96.23" y="382.74" width="63.56" height="16.37" transform="translate(-274.54 306.32) rotate(-60)" fill="#1c68a6"/>
+        <rect x="25.79" y="312.29" width="63.56" height="16.37" transform="translate(-152.53 71.72) rotate(-30)" fill="#1c68a6"/>
+        <rect y="216.06" width="63.56" height="16.37" fill="#1c68a6"/>
+        <rect x="49.38" y="96.23" width="16.37" height="63.56" transform="translate(-82.08 113.86) rotate(-60)" fill="#1c68a6"/>
+        <rect x="119.83" y="25.79" width="16.37" height="63.56" transform="translate(-11.63 71.72) rotate(-30)" fill="#1c68a6"/>
+        <rect x="216.06" width="16.37" height="63.56" fill="#1c68a6"/>
+        </g>
+        <g class="pragotron-hour">
+        <polygon points="236.26 90.35 224.56 86.01 212.87 90.35 208.39 274.7 224.56 274.7 240.74 274.7 236.26 90.35" fill="#f15b40"/>
+        </g>
+        <g class="pragotron-minute">
+        <polygon points="231.81 24.61 224.24 20.34 216.68 24.61 210.76 297.69 224.24 297.69 237.73 297.69 231.81 24.61" fill="#1c68a6"/>
+        </g>
+      </g>
+
+      <!-- ZAHNUTÝ LIST A4 (INFO) -->
+      <g id="asset-curved-a4">
+        <path
+        class="a4-paper-path focus-ring-target"
+        d="M2,203.51l148.95-40.55c36.19-9.85,61.31-42.72,61.31-80.23V2l177.65,50.4v80.73c0,37.51-25.12,70.38-61.31,80.23l-148.95,40.55L2,203.51Z"
+        fill="#ffffff"
+        stroke="#1c68a6"
+        stroke-linejoin="round"
+        stroke-width="4"
+        />
+        <g class="a4-info-glyphs" fill="#1c68a6">
+        <path d="M248.31,48.96l-11.18-3.14v-8.6l11.18,3.14v8.6ZM248.31,98.41l-11.18-3.14v-43.72l11.18,3.14v43.72Z"/>
+        <path d="M268.58,76.87v27.23l-11.18-3.14v-43.72l9.79,2.75v6.45c2.45-3.83,6.43-5.36,10.83-4.12,8.39,2.36,12.93,10.08,12.93,19.76v28.31l-11.18-3.14v-27.23c0-4.66-1.75-8.02-5.24-9-3.5-.98-5.94.84-5.94,5.86Z"/>
+        <path d="M295.84,68.04l5.59,1.57c0-9.03,6.29-12.57,15.03-10.11l3.49.98v8.6l-2.1-.59c-4.19-1.18-5.24.68-5.24,4.26l7.34,2.06v8.6l-7.34-2.06v35.12l-11.18-3.14v-35.12l-5.59-1.57v-8.6Z"/>
+        <path d="M356.99,113.18c0,10.39-7.69,14.61-17.12,11.96-9.44-2.65-17.12-11.19-17.12-21.58v-12.18c0-10.39,7.69-14.61,17.12-11.96,9.44,2.65,17.12,11.19,17.12,21.58v12.18ZM345.81,108.96v-10.03c0-5.73-2.1-9.55-5.94-10.63-3.84-1.08-5.94,1.56-5.94,7.29v10.03c0,5.73,2.1,9.55,5.94,10.63,3.84,1.08,5.94-1.56,5.94-7.29Z"/>
+        </g>
+      </g>
+    </svg>
+  </template>
+</body>
+</html>
