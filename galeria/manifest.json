@@ -1,12 +1,26 @@
 {
-  "generatedAt": "2026-11-27T07:45:00Z",
+  "generatedAt": "2026-11-27T07:11:22Z",
   "departments": {
     "ANI": [],
     "DDA": [],
     "DEX": [],
     "DIM": [],
     "FOD": [],
-    "GDI": [],
+    "GDI": [
+      {
+        "id": "GDI-2025_Jožko_Mrkvička_Kniha-Básne",
+        "filename": "2025_Jožko_Mrkvička_Kniha-Básne.JPG",
+        "title": "Mrkvička Kniha Básne",
+        "author": "Jožko",
+        "year": "2025",
+        "width": 5472,
+        "height": 3648,
+        "addedAt": 1795763469,
+        "thumbUrl": "./galeria/thumbs/GDI/2025_Jo%C5%BEko_Mrkvi%C4%8Dka_Kniha-B%C3%A1sne.webp",
+        "fullUrl": "./galeria/GDI/2025_Jo%C5%BEko_Mrkvi%C4%8Dka_Kniha-B%C3%A1sne.JPG",
+        "isNew": true
+      }
+    ],
     "GPD": [],
     "KRM": [],
     "ODE": [],
